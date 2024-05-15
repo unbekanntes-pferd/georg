@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Search from '$lib/components/dataTableChildren/Search.svelte';
 	import ThFilter from '$lib/components/dataTableChildren/ThFilter.svelte';
-	import ThSort from '$lib/components/dataTableChildren/ThSort.svelte';
-	import RowCount from '$lib/components/dataTableChildren/RowCount.svelte';
-	import RowsPerPage from '$lib/components/dataTableChildren/RowsPerPage.svelte';
-	import Pagination from '$lib/components/dataTableChildren/Pagination.svelte';
+	import ThSort from '$lib/components/dataTableCandidates/ThSort.svelte';
+	import RowCount from '$lib/components/dataTableCandidates/RowCount.svelte';
+	import RowsPerPage from '$lib/components/dataTableCandidates/RowsPerPage.svelte';
+	import Pagination from '$lib/components/dataTableCandidates/Pagination.svelte';
 	import { DataHandler } from '@vincjo/datatables';
 	import type { ChildCareRequest } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';

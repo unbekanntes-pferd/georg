@@ -4,12 +4,14 @@
 	const rowCount = handler.getRowCount();
 </script>
 
-<aside class="text-sm leading-8 mr-6">
-	{#if $rowCount.total > 0}
-		<b>{$rowCount.start}</b>
-		- <b>{$rowCount.end}</b>
-		/ <b>{$rowCount.total}</b>
-	{:else}
-		No entries found
-	{/if}
+<aside class="flex text-sm leading-8 mr-8 place-items-center">
+	<span>
+		{#if $rowCount.total > 0}
+			<b>{$rowCount.start}</b>
+			- <b>{$rowCount.end}</b>
+			/ <b>{$rowCount.total}</b>
+		{:else}
+			Keine Einträge gefunden
+		{/if}
+	</span>
 </aside>
