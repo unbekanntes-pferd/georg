@@ -3,24 +3,28 @@ use std::{
     time::SystemTime,
 };
 
-use crate::models::{GeorgError, GeorgState};
+use crate::models::{AppState, GeorgError, GeorgState};
 
 use self::{candidates::parse_candidate_data, models::ImportFiles};
 
-pub use models::CandidateRequests;
+pub use models::{Candidate, CandidateRequests, ChildCareRequest};
 
 pub(crate) mod candidates;
 mod models;
 
 const CANDIDATE_XLSX_NAME: &str = "Bewerbungen_und_Anfragen_Begleitungen";
 
-#[tauri::command]
-pub fn import_candidate_data(path: String, state: tauri::State<GeorgState>) -> Result<(), String> {
-    get_import_files(Path::new(&path))
+#[tauri::command(async)]
+pub fn import_candidate_data(path: String, state: tauri::State<AppState>) -> Result<(), String> {
+    let path = Path::new(&path).to_owned(); // Ensure path is owned before moving into the thread
+
+    get_import_files(&path)
         .map_err(|err| err.to_string())
-        .and_then(|import_files| {
+        .and_then(move |import_files| {
             let data = parse_candidate_data(&import_files).map_err(|err| err.to_string())?;
-            state.update(data);
+            state.inner().inner().update(data);
+            state.inner().inner().set_geo_codes().map_err(|err| err.to_string())?;
+
             //sync_candidate_data(data).map_err(|err| err.to_string())?; TODO: implement writing DB
             Ok(())
         })
