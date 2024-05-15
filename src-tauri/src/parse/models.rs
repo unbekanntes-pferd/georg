@@ -1,6 +1,6 @@
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Candidate {
@@ -32,6 +32,28 @@ pub struct Candidate {
     pub personal_documentation: Option<String>,
     #[serde(rename(serialize = "plannedChild", deserialize = "Geplantes Kind"))]
     pub planned_child: Option<String>,
+}
+
+impl Candidate {
+    #[cfg(test)]
+    pub fn new_mock(loc: &str) -> Self {
+        Self {
+            name: "Max Mustermann".to_string(),
+            location: loc.to_string(),
+            qualification: Some("Erzieher".to_string()),
+            hours: None,
+            mobility: None,
+            received_at: None,
+            notes: None,
+            start_note: None,
+            sent_documents: None,
+            completed_checklist: None,
+            vaccination_stat: None,
+            certification_state: None,
+            personal_documentation: None,
+            planned_child: None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -66,6 +88,21 @@ impl CandidateRequests {
         Self {
             candidates,
             child_care_requests,
+        }
+    }
+
+    #[cfg(test)]
+    pub fn new_mock() -> Self {
+        let cand_1 = Candidate::new_mock("Berlin");
+        let cand_2 = Candidate::new_mock("Regensburg");
+        let cand_3 = Candidate::new_mock("Kareth");
+        let cand_4 = Candidate::new_mock("Maxhütte");
+
+        let candidates = vec![cand_1, cand_2, cand_3, cand_4];
+
+        Self {
+            candidates,
+            child_care_requests: vec![],
         }
     }
 }

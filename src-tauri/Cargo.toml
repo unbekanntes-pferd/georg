@@ -21,6 +21,8 @@ tauri = { version = "1.6.5", features = ["api-all"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 calamine = { version = "0.24.0", features = ["chrono"] }
 thiserror = "1.0.60"
+photon-geocoding = "1.1.1"
+haversine = "0.2.1"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
