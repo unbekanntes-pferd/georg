@@ -1,9 +1,8 @@
 use std::path::PathBuf;
 
-use chrono::NaiveDate;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Candidate {
     #[serde(rename = "Name")]
     pub name: String,
@@ -35,7 +34,7 @@ pub struct Candidate {
     pub planned_child: Option<String>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ChildCareRequest {
     #[serde(rename = "Einrichtung")]
     pub institution: String,
@@ -55,7 +54,7 @@ pub struct ChildCareRequest {
     pub notes: Option<String>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct CandidateRequests {
     pub candidates: Vec<Candidate>,
     pub child_care_requests: Vec<ChildCareRequest>,
