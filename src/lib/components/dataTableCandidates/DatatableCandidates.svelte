@@ -27,7 +27,7 @@
 				<tr>
 					<td>Match</td>
 					<ThSort {handler} orderBy="name">Name</ThSort>
-					<td>Ort</td>
+					<ThSort {handler} orderBy="location">Ort</ThSort>
 					<td>Qualif.</td>
 					<td>Stundenumfang</td>
 					<td>Mobilität</td>
@@ -40,10 +40,6 @@
 					<td>Führungszeugnis</td>
 					<td>Personalbogen</td>
 					<td>Geplantes Kind</td>
-				</tr>
-				<tr>
-					<td></td>
-					<ThFilter {handler} filterBy="name" />
 				</tr>
 			</thead>
 
