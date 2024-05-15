@@ -20,7 +20,9 @@ pub (crate) fn parse_candidate_data(import_files: &ImportFiles) -> Result<Candid
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     let candidates = parse_candidates(&mut workbook)?;
+    let candidates = candidates.into_iter().map(|c| c.into()).collect();
     let child_care_requests = parse_child_care_requests(&mut workbook)?;
+    let child_care_requests = child_care_requests.into_iter().map(|c| c.into()).collect();
     Ok(CandidateRequests::new(candidates, child_care_requests))
 }
 
