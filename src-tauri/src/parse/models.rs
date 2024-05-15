@@ -30,3 +30,8 @@ pub struct ChildCareRequest {
     pub received_at: NaiveDate,
     pub notes: Option<String>,
 }
+
+pub struct CandidateRequests {
+    pub candidates: Vec<Candidate>,
+    pub child_care_requests: Vec<ChildCareRequest>,
+}
