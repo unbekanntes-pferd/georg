@@ -2,6 +2,8 @@
 	import { open } from '@tauri-apps/api/dialog';
 	import { invoke } from '@tauri-apps/api/tauri';
 	import { Command, State, type DirectoryPathCommand } from './directoryTableModals';
+	import ClarityDirectorySolid from '~icons/clarity/directory-solid';
+	import MaterialSymbolsDirectorySyncRounded from '~icons/material-symbols/directory-sync-rounded';
 
 	let candidates = {
 		fileName: 'Bewerbungen und Anfragen_Begleitungen.xlsx',
@@ -66,11 +68,22 @@
 					<tr>
 						<td>{row.fileName}</td>
 						{#if row.path}
-							<td>{row.path}</td>
+							<td class="flex flew-row"
+								>{row.path}
+								<button
+									on:click={() => handleOpenDirectory(row)}
+									class="text-green-500 flex flex-row"
+									><MaterialSymbolsDirectorySyncRounded class="ml-2" /></button
+								></td
+							>
 						{:else}
 							<td
-								><button on:click={() => handleOpenDirectory(row)} class="text-yellow-500"
-									>Noch kein Pfad angegeben - Auswählen</button
+								><button
+									on:click={() => handleOpenDirectory(row)}
+									class="text-yellow-500 flex flex-row"
+									><span>Noch kein Pfad angegeben</span><ClarityDirectorySolid
+										class="ml-2"
+									/></button
 								></td
 							>
 						{/if}
