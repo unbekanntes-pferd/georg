@@ -34,6 +34,7 @@ pub struct Candidate {
     pub planned_child: Option<String>,
 }
 
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CandidateResponse {
@@ -126,6 +127,7 @@ pub struct ChildCareRequest {
     #[serde(rename(serialize = "notes", deserialize = "Bemerkung"))]
     pub notes: Option<String>,
 }
+
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]

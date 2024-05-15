@@ -1,48 +1,50 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
-
+	import { AppShell, AppBar, type DrawerSettings, getDrawerStore } from '@skeletonlabs/skeleton';
+	import FeBar from '~icons/fe/bar';
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
+	import { initializeStores, Drawer } from '@skeletonlabs/skeleton';
+	import LeftSideBar from '$lib/components/LeftSideBar.svelte';
+	import CandidateDrawer from '$lib/components/CandidateDrawer.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+
+	initializeStores();
+
+	let isHiddenSidebar = false;
+
+	function toogleSidebar() {
+		isHiddenSidebar = !isHiddenSidebar;
+	}
+	const drawerStore = getDrawerStore();
 </script>
+
+<Drawer>
+	{#if $drawerStore.id === 'matchCandidatesToChildCareRequests'}
+		<CandidateDrawer />
+	{/if}
+</Drawer>
 
 <!-- App Shell -->
 <AppShell>
 	<svelte:fragment slot="header">
 		<!-- App Bar -->
-		<AppBar>
+		<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Skeleton</strong>
+				<button on:click={toogleSidebar} aria-label="Toggle Sidebar">
+					<FeBar class={isHiddenSidebar ? 'rotate-90' : ''} />
+				</button>
 			</svelte:fragment>
-			<svelte:fragment slot="trail">
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://discord.gg/EXqV7W8MtY"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Discord
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://twitter.com/SkeletonUI"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Twitter
-				</a>
-				<a
-					class="btn btn-sm variant-ghost-surface"
-					href="https://github.com/skeletonlabs/skeleton"
-					target="_blank"
-					rel="noreferrer"
-				>
-					GitHub
-				</a>
-			</svelte:fragment>
+
+			<svelte:fragment slot="trail"
+				><strong class="text-xl uppercase">Georg</strong></svelte:fragment
+			>
 		</AppBar>
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+		<!-- Hidden below Tailwind's large breakpoint -->
+		<div id="sidebar-left" class="h-full" class:hidden={isHiddenSidebar}><LeftSideBar /></div>
 	</svelte:fragment>
 	<!-- Page Route Content -->
 	<slot />
