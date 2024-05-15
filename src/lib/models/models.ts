@@ -1,6 +1,6 @@
 import { fakerDE as faker } from '@faker-js/faker';
 
-interface Candidate {
+export interface Candidate {
 	name: string;
 	location: string;
 	qualification: string | null;
@@ -17,7 +17,7 @@ interface Candidate {
 	plannedChild: string | null;
 }
 
-interface ChildCareRequest {
+export interface ChildCareRequest {
 	institution: string;
 	location: string;
 	grade: string;
@@ -30,6 +30,10 @@ interface ChildCareRequest {
 
 export interface ResponseGetCandidates {
 	candidates: Candidate[];
+	childCareRequests: ChildCareRequest[];
+}
+
+export interface ResponseGetCandidateMatches {
 	childCareRequests: ChildCareRequest[];
 }
 
