@@ -8,7 +8,7 @@ use self::models::ChildCareRequestMatch;
 
 #[tauri::command(async)]
 pub fn find_candidate_matches(
-    id: usize,
+    id: String,
     state: tauri::State<AppState>,
 ) -> Result<Vec<ChildCareRequestMatch>, GeorgError> {
     let data = state.inner().inner();
@@ -18,7 +18,7 @@ pub fn find_candidate_matches(
         .lock()
         .expect("poisoned mutex")
         .iter()
-        .map(|(id, geo_code)| (*id, geo_code.clone()))
+        .map(|(id, geo_code)| (id.clone(), geo_code.clone()))
         .collect();
 
     let candidate_geo_code = data
@@ -40,7 +40,7 @@ pub fn find_candidate_matches(
                 .candidate_requests
                 .lock()
                 .expect("poisoned mutex");
-            let Ok(req) = data.child_care_requests.get(*id).ok_or(GeorgError::Unknown) else {
+            let Some(req) = data.child_care_requests.iter().find(|req| req.id == *id) else {
                 return None;
             };
             Some(ChildCareRequestMatch::new(req.clone(), *distance))
@@ -52,8 +52,8 @@ pub fn find_candidate_matches(
 
 fn find_matches(
     candidate: GeoCode,
-    child_care_requests: Vec<(usize, GeoCode)>,
-) -> Vec<(usize, f64)> {
+    child_care_requests: Vec<(String, GeoCode)>,
+) -> Vec<(String, f64)> {
     child_care_requests
         .iter()
         .map(|(id, geo_code)| {
@@ -61,7 +61,7 @@ fn find_matches(
             let loc_req: Location = geo_code.clone().into();
             let distance =
                 haversine::distance(loc_candidate, loc_req, haversine::Units::Kilometers);
-            (*id, distance)
+            (id.clone(), distance)
         })
         .collect()
 }

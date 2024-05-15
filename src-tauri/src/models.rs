@@ -48,7 +48,7 @@ impl From<GeoCode> for Location {
 pub struct GeorgState {
     pub candidate_requests: Mutex<CandidateRequests>,
     photon_api_client: PhotonApiClient,
-    pub candidates_geo_codes: Mutex<HashMap<usize, GeoCode>>,
+    pub candidates_geo_codes: Mutex<HashMap<String, GeoCode>>,
     pub req_geo_codes: Mutex<HashMap<usize, GeoCode>>,
 }
 
@@ -86,7 +86,7 @@ impl GeorgState {
 
         for (index, candidate) in candidate_reqs.candidates.iter().enumerate() {
             let geo_code = self.get_geo_code(&candidate.location)?;
-            geo_codes.insert(index, geo_code);
+            geo_codes.insert(candidate.id.clone(), geo_code);
         }
 
         let mut req_geo_codes = self.req_geo_codes.lock().expect("poisoned mutex");

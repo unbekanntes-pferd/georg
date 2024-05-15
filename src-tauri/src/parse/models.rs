@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::path::PathBuf;
-
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Candidate {
@@ -34,10 +34,62 @@ pub struct Candidate {
     pub planned_child: Option<String>,
 }
 
-impl Candidate {
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CandidateResponse {
+    pub id: String,
+    pub name: String,
+    pub location: String,
+    pub qualification: Option<String>,
+    pub hours: Option<String>,
+    pub mobility: Option<String>,
+    pub received_at: Option<String>,
+    pub notes: Option<String>,
+    pub start_note: Option<String>,
+    pub sent_documents: Option<String>,
+    pub completed_checklist: Option<String>,
+    pub vaccination_stat: Option<String>,
+    pub certification_state: Option<String>,
+    pub personal_documentation: Option<String>,
+    pub planned_child: Option<String>,
+}
+
+impl From<Candidate> for CandidateResponse {
+    fn from(cand: Candidate) -> Self {
+        let unique_factors = format!("{}:{}", cand.name, cand.location);
+
+        let id = Sha256::digest(unique_factors.as_bytes())
+            .to_vec()
+            .iter()
+            .map(|b| format!("{:02x}", b))
+            .collect::<String>();
+
+        Self {
+            id,
+            name: cand.name,
+            location: cand.location,
+            qualification: cand.qualification,
+            hours: cand.hours,
+            mobility: cand.mobility,
+            received_at: cand.received_at,
+            notes: cand.notes,
+            start_note: cand.start_note,
+            sent_documents: cand.sent_documents,
+            completed_checklist: cand.completed_checklist,
+            vaccination_stat: cand.vaccination_stat,
+            certification_state: cand.certification_state,
+            personal_documentation: cand.personal_documentation,
+            planned_child: cand.planned_child,
+        }
+    }
+}
+
+impl CandidateResponse {
     #[cfg(test)]
     pub fn new_mock(loc: &str) -> Self {
         Self {
+            id: "123".to_string(),
             name: "Max Mustermann".to_string(),
             location: loc.to_string(),
             qualification: Some("Erzieher".to_string()),
@@ -76,15 +128,54 @@ pub struct ChildCareRequest {
     pub notes: Option<String>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChildCareRequestResponse {
+    pub id: String,
+    pub institution: String,
+    pub location: String,
+    pub grade: String,
+    pub hours: String,
+    pub diagnosis: Option<String>,
+    pub contact: String,
+    pub received_at: Option<String>,
+    pub notes: Option<String>,
+}
+
+impl From<ChildCareRequest> for ChildCareRequestResponse {
+    fn from(req: ChildCareRequest) -> Self {
+        let unique_factors = format!("{}:{}", req.institution, req.location);
+
+        let id = Sha256::digest(unique_factors.as_bytes())
+            .to_vec()
+            .iter()
+            .map(|b| format!("{:02x}", b))
+            .collect::<String>();
+
+        Self {
+            id,
+            institution: req.institution,
+            location: req.location,
+            grade: req.grade,
+            hours: req.hours,
+            diagnosis: req.diagnosis,
+            contact: req.contact,
+            received_at: req.received_at,
+            notes: req.notes,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CandidateRequests {
-    pub candidates: Vec<Candidate>,
-    pub child_care_requests: Vec<ChildCareRequest>,
+    pub candidates: Vec<CandidateResponse>,
+    pub child_care_requests: Vec<ChildCareRequestResponse>,
 }
 
 impl CandidateRequests {
-    pub fn new(candidates: Vec<Candidate>, child_care_requests: Vec<ChildCareRequest>) -> Self {
+    pub fn new(candidates: Vec<CandidateResponse>, child_care_requests: Vec<ChildCareRequestResponse>) -> Self {
         Self {
             candidates,
             child_care_requests,
@@ -93,10 +184,10 @@ impl CandidateRequests {
 
     #[cfg(test)]
     pub fn new_mock() -> Self {
-        let cand_1 = Candidate::new_mock("Berlin");
-        let cand_2 = Candidate::new_mock("Regensburg");
-        let cand_3 = Candidate::new_mock("Kareth");
-        let cand_4 = Candidate::new_mock("Maxhütte");
+        let cand_1 = CandidateResponse::new_mock("Berlin");
+        let cand_2 = CandidateResponse::new_mock("Regensburg");
+        let cand_3 = CandidateResponse::new_mock("Kareth");
+        let cand_4 = CandidateResponse::new_mock("Maxhütte");
 
         let candidates = vec![cand_1, cand_2, cand_3, cand_4];
 
