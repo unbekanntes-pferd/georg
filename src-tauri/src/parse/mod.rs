@@ -5,14 +5,11 @@ use std::{
 
 use crate::models::{GeorgError, GeorgState};
 
-use self::{
-    candidates::{parse_candidate_data, sync_candidate_data},
-    models::{ImportFiles},
-};
+use self::{candidates::parse_candidate_data, models::ImportFiles};
 
 pub use models::CandidateRequests;
 
-mod candidates;
+pub(crate) mod candidates;
 mod models;
 
 const CANDIDATE_XLSX_NAME: &str = "Bewerbungen_und_Anfragen_Begleitungen";
