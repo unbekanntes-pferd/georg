@@ -13,7 +13,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             parse::import_candidate_data,
             parse::candidates::get_candidate_data,
-            geo::find_candidate_matches
+            geo::find_candidate_matches,
+            geo::find_childcare_req_matches
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

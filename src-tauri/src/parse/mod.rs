@@ -7,7 +7,7 @@ use crate::models::{AppState, GeorgError};
 
 use self::{candidates::parse_candidate_data, models::ImportFiles};
 
-pub use models::{CandidateRequests, ChildCareRequestResponse};
+pub use models::{CandidateRequests, ChildCareRequestResponse, CandidateResponse};
 
 pub(crate) mod candidates;
 mod models;

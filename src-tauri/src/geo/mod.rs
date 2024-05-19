@@ -1,17 +1,18 @@
 use std::sync::Arc;
 
 use haversine::Location;
+use tauri::State;
 
 mod models;
 
 use crate::models::{AppState, GeoCode, GeorgError, GeorgState};
 
-use self::models::ChildCareRequestMatch;
+use self::models::{CandidateMatch, ChildCareRequestMatch};
 
 #[tauri::command(async)]
 pub fn find_candidate_matches(
     id: String,
-    state: tauri::State<AppState>,
+    state: State<AppState>,
 ) -> Result<Vec<ChildCareRequestMatch>, String> {
     let data = state.inner().inner();
 
@@ -41,9 +42,49 @@ pub fn find_candidate_matches(
 
     let data_clone = data.clone();
 
-    let matches = build_matches(matches, data_clone);
+    let matches = build_childcare_req_matches(matches, data_clone);
 
     Ok(matches)
+}
+
+#[tauri::command(async)]
+pub fn find_childcare_req_matches(
+    id: String,
+    state: State<AppState>
+) -> Result<Vec<CandidateMatch>, String> {
+    let data = state.inner().inner();
+
+    let candidates_geo_codes: Vec<_> = data
+        .candidates_geo_codes
+        .lock()
+        .expect("poisoned mutex")
+        .iter()
+        .map(|(id, geo_code)| (id.clone(), geo_code.clone()))
+        .collect();
+
+    let req_geo_code = data
+        .req_geo_codes
+        .lock()
+        .expect("poisoned mutex")
+        .get(&id)
+        .cloned()
+        .ok_or(GeorgError::MissingGeoCode)
+        .map_err(|err| err.to_string())?;
+
+    let mut matches = find_matches(req_geo_code, candidates_geo_codes);
+
+    matches.sort_by(|(_, distance), (_, other_distance)| {
+        distance
+            .partial_cmp(other_distance)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+
+    let data_clone = data.clone();
+
+    let matches = build_candidate_matches(matches, data_clone);
+
+    Ok(matches)
+
 }
 
 fn find_matches(
@@ -62,7 +103,7 @@ fn find_matches(
         .collect()
 }
 
-fn build_matches(
+fn build_childcare_req_matches(
     matches: Vec<(String, f64)>,
     data: Arc<GeorgState>
 ) -> Vec<ChildCareRequestMatch> {
@@ -77,6 +118,25 @@ fn build_matches(
                 return None;
             };
             Some(ChildCareRequestMatch::new(req.clone(), *distance))
+        })
+        .collect()
+}
+
+fn build_candidate_matches(
+    matches: Vec<(String, f64)>,
+    data: Arc<GeorgState>
+) -> Vec<CandidateMatch> {
+    matches
+        .iter()
+        .filter_map(|(id, distance)| {
+            let data = data
+                .candidate_requests
+                .lock()
+                .expect("poisoned mutex");
+            let Some(candidate) = data.candidates.iter().find(|candidate| candidate.id == *id) else {
+                return None;
+            };
+            Some(CandidateMatch::new(candidate.clone(), *distance))
         })
         .collect()
 }
