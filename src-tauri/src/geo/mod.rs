@@ -1,8 +1,10 @@
+use std::sync::Arc;
+
 use haversine::Location;
 
 mod models;
 
-use crate::models::{AppState, GeoCode, GeorgError};
+use crate::models::{AppState, GeoCode, GeorgError, GeorgState};
 
 use self::models::ChildCareRequestMatch;
 
@@ -14,7 +16,7 @@ pub fn find_candidate_matches(
     let data = state.inner().inner();
 
     let reqs_geo_codes: Vec<_> = data
-        .candidates_geo_codes
+        .req_geo_codes
         .lock()
         .expect("poisoned mutex")
         .iter()
@@ -39,19 +41,7 @@ pub fn find_candidate_matches(
 
     let data_clone = data.clone();
 
-    let matches = matches
-        .iter()
-        .filter_map(|(id, distance)| {
-            let data = data_clone
-                .candidate_requests
-                .lock()
-                .expect("poisoned mutex");
-            let Some(req) = data.child_care_requests.iter().find(|req| req.id == *id) else {
-                return None;
-            };
-            Some(ChildCareRequestMatch::new(req.clone(), *distance))
-        })
-        .collect();
+    let matches = build_matches(matches, data_clone);
 
     Ok(matches)
 }
@@ -70,4 +60,41 @@ fn find_matches(
             (id.clone(), distance)
         })
         .collect()
+}
+
+fn build_matches(
+    matches: Vec<(String, f64)>,
+    data: Arc<GeorgState>
+) -> Vec<ChildCareRequestMatch> {
+    matches
+        .iter()
+        .filter_map(|(id, distance)| {
+            let data = data
+                .candidate_requests
+                .lock()
+                .expect("poisoned mutex");
+            let Some(req) = data.child_care_requests.iter().find(|req| req.id == *id) else {
+                return None;
+            };
+            Some(ChildCareRequestMatch::new(req.clone(), *distance))
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{models::GeorgState, parse::CandidateRequests};
+
+
+    #[test]
+    fn test_build_matches() {
+
+        let georg_state = GeorgState::new();
+        let candidate_reqs = CandidateRequests::new_mock();
+
+        georg_state.update(candidate_reqs);
+        georg_state.set_geo_codes().unwrap();
+
+
+    }
 }
