@@ -1,7 +1,7 @@
 use std::{collections::HashMap, sync::{Arc, Mutex}};
 
 use haversine::Location;
-use photon_geocoding::{error, filter::ForwardFilter, PhotonApiClient};
+use photon_geocoding::{filter::ForwardFilter, PhotonApiClient};
 
 use crate::parse::CandidateRequests;
 
@@ -49,7 +49,7 @@ pub struct GeorgState {
     pub candidate_requests: Mutex<CandidateRequests>,
     photon_api_client: PhotonApiClient,
     pub candidates_geo_codes: Mutex<HashMap<String, GeoCode>>,
-    pub req_geo_codes: Mutex<HashMap<usize, GeoCode>>,
+    pub req_geo_codes: Mutex<HashMap<String, GeoCode>>,
 }
 
 pub struct AppState(Arc<GeorgState>);
@@ -84,16 +84,16 @@ impl GeorgState {
         let mut geo_codes = self.candidates_geo_codes.lock().expect("poisoned mutex");
         let candidate_reqs = self.candidate_requests.lock().expect("poisoned mutex");
 
-        for (index, candidate) in candidate_reqs.candidates.iter().enumerate() {
+        for candidate in candidate_reqs.candidates.iter() {
             let geo_code = self.get_geo_code(&candidate.location)?;
             geo_codes.insert(candidate.id.clone(), geo_code);
         }
 
         let mut req_geo_codes = self.req_geo_codes.lock().expect("poisoned mutex");
 
-        for (index, req) in candidate_reqs.child_care_requests.iter().enumerate() {
+        for req in candidate_reqs.child_care_requests.iter() {
             let geo_code = self.get_geo_code(&req.location)?;
-            req_geo_codes.insert(index, geo_code);
+            req_geo_codes.insert(req.id.clone(), geo_code);
         }
   
         Ok(())

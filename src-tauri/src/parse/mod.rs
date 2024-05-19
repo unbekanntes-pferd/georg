@@ -3,11 +3,11 @@ use std::{
     time::SystemTime,
 };
 
-use crate::models::{AppState, GeorgError, GeorgState};
+use crate::models::{AppState, GeorgError};
 
 use self::{candidates::parse_candidate_data, models::ImportFiles};
 
-pub use models::{CandidateRequests, ChildCareRequest, ChildCareRequestResponse, CandidateResponse};
+pub use models::{CandidateRequests, ChildCareRequestResponse};
 
 pub(crate) mod candidates;
 mod models;
@@ -23,7 +23,11 @@ pub fn import_candidate_data(path: String, state: tauri::State<AppState>) -> Res
         .and_then(move |import_files| {
             let data = parse_candidate_data(&import_files).map_err(|err| err.to_string())?;
             state.inner().inner().update(data);
-            state.inner().inner().set_geo_codes().map_err(|err| err.to_string())?;
+            state
+                .inner()
+                .inner()
+                .set_geo_codes()
+                .map_err(|err| err.to_string())?;
 
             //sync_candidate_data(data).map_err(|err| err.to_string())?; TODO: implement writing DB
             Ok(())

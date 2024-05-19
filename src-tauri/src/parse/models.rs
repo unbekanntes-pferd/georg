@@ -34,6 +34,7 @@ pub struct Candidate {
     pub planned_child: Option<String>,
 }
 
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CandidateResponse {
@@ -86,9 +87,9 @@ impl From<Candidate> for CandidateResponse {
 
 impl CandidateResponse {
     #[cfg(test)]
-    pub fn new_mock(loc: &str) -> Self {
+    pub fn new_mock(id: &str, loc: &str) -> Self {
         Self {
-            id: "123".to_string(),
+            id: id.to_string(),
             name: "Max Mustermann".to_string(),
             location: loc.to_string(),
             qualification: Some("Erzieher".to_string()),
@@ -126,6 +127,7 @@ pub struct ChildCareRequest {
     #[serde(rename(serialize = "notes", deserialize = "Bemerkung"))]
     pub notes: Option<String>,
 }
+
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -182,10 +184,10 @@ impl CandidateRequests {
 
     #[cfg(test)]
     pub fn new_mock() -> Self {
-        let cand_1 = CandidateResponse::new_mock("Berlin");
-        let cand_2 = CandidateResponse::new_mock("Regensburg");
-        let cand_3 = CandidateResponse::new_mock("Kareth");
-        let cand_4 = CandidateResponse::new_mock("Maxhütte");
+        let cand_1 = CandidateResponse::new_mock("1", "Berlin");
+        let cand_2 = CandidateResponse::new_mock("2", "Regensburg");
+        let cand_3 = CandidateResponse::new_mock("3", "Kareth");
+        let cand_4 = CandidateResponse::new_mock("4", "Maxhütte");
 
         let candidates = vec![cand_1, cand_2, cand_3, cand_4];
 
