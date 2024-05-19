@@ -10,7 +10,7 @@ use self::models::ChildCareRequestMatch;
 pub fn find_candidate_matches(
     id: String,
     state: tauri::State<AppState>,
-) -> Result<Vec<ChildCareRequestMatch>, GeorgError> {
+) -> Result<Vec<ChildCareRequestMatch>, String> {
     let data = state.inner().inner();
 
     let reqs_geo_codes: Vec<_> = data
@@ -27,9 +27,15 @@ pub fn find_candidate_matches(
         .expect("poisoned mutex")
         .get(&id)
         .cloned()
-        .ok_or(GeorgError::MissingGeoCode)?;
+        .ok_or(GeorgError::MissingGeoCode)
+        .map_err(|err| err.to_string())?;
 
-    let matches = find_matches(candidate_geo_code, reqs_geo_codes);
+    let mut matches = find_matches(candidate_geo_code, reqs_geo_codes);
+    matches.sort_by(|(_, distance), (_, other_distance)| {
+        distance
+            .partial_cmp(other_distance)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 
     let data_clone = data.clone();
 

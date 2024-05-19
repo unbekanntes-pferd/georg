@@ -5,13 +5,14 @@ use calamine::{open_workbook, RangeDeserializerBuilder, Reader, Xlsx};
 const CANDIDATE_SHEET_NAME: &str = "Bewerber_innen";
 const CHILD_CARE_SHEET_NAME: &str = "Anfragen Kinder";
 
-use crate::models::{GeorgError, GeorgState};
+use crate::models::{AppState, GeorgError};
 
 use super::models::{Candidate, CandidateRequests, ChildCareRequest, ImportFiles};
 
 #[tauri::command]
-pub fn get_candidate_data(state: tauri::State<GeorgState>) -> Result<CandidateRequests, String> {
-    let data = state.candidate_requests.lock().expect("poisoned mutex");
+pub fn get_candidate_data(state: tauri::State<AppState>) -> Result<CandidateRequests, String> {
+    let georg_state = state.inner().inner();
+    let data = georg_state.candidate_requests.lock().expect("poisoned lock");
     Ok(data.clone())
 }
 
