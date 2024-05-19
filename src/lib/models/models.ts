@@ -1,6 +1,7 @@
 import { fakerDE as faker } from '@faker-js/faker';
 
 export interface Candidate {
+	id: string;
 	name: string;
 	location: string;
 	qualification: string | null;
@@ -18,6 +19,7 @@ export interface Candidate {
 }
 
 export interface ChildCareRequest {
+	id: string;
 	institution: string;
 	location: string;
 	grade: string;
@@ -29,13 +31,16 @@ export interface ChildCareRequest {
 }
 
 export interface ResponseGetCandidates {
-	candidates: Candidate[];
+	candidate: Candidate[];
 	childCareRequests: ChildCareRequest[];
 }
 
 export interface ResponseGetCandidateMatches {
-	childCareRequests: ChildCareRequest[];
+	candidate: ChildCareRequest,
+	distance: number
 }
+
+
 
 function getRandomElement<T>(items: T[]): T {
 	return items[Math.floor(Math.random() * items.length)];
@@ -43,6 +48,7 @@ function getRandomElement<T>(items: T[]): T {
 
 export function randomizeCandidate(): Candidate {
 	return {
+		id: faker.string.uuid(),
 		name: faker.person.fullName(),
 		location: faker.location.city(),
 		qualification: getRandomElement(['Bachelor', 'Master', 'PhD', 'Diploma']),
@@ -74,6 +80,7 @@ export function generateCandidates(count: number): Candidate[] {
 
 export function randomizeChildCareRequest(): ChildCareRequest {
 	return {
+		id: faker.string.uuid(),
 		institution: faker.company.name(),
 		location: faker.location.city(),
 		grade: faker.number.int({ min: 0, max: 5 }).toString(),

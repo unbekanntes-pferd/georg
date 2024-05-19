@@ -2,16 +2,17 @@
 	import IconParkSolidConnection from '~icons/icon-park-solid/connection';
 	import { getDrawerStore, type DrawerSettings } from '@skeletonlabs/skeleton';
 	import {
-		generateChildCareRequests,
 		type Candidate,
-		type ChildCareRequest
+		type ResponseGetCandidates
+
 	} from '$lib/models/models';
+	import { find_candidate_matches } from '$lib/data/data';
 
 	const drawerStore = getDrawerStore();
 	export let candidate: Candidate;
 
 	let isOpenMatches = false;
-	let matches: ChildCareRequest[];
+	let matches: ResponseGetCandidates[];
 
 	let drawerSettings: DrawerSettings = {
 		id: 'matchCandidatesToChildCareRequests',
@@ -19,9 +20,9 @@
 		width: 'w-1/2'
 	};
 
-	function getMatches() {
+	async function getMatches(id: string) {
 		isOpenMatches = !isOpenMatches;
-		matches = generateChildCareRequests(5);
+		matches = await find_candidate_matches(id);
 		drawerSettings.meta = {
 			matches
 		};
@@ -31,7 +32,7 @@
 
 <tbody>
 	<tr>
-		<td on:click={getMatches}><IconParkSolidConnection /></td>
+		<td on:click={() => getMatches(candidate.id)}><IconParkSolidConnection /></td>
 		<td>{candidate.name ? candidate.name : '-'}</td>
 		<td>{candidate.location ? candidate.location : '-'}</td>
 		<td>{candidate.qualification ? candidate.qualification : '-'}</td>

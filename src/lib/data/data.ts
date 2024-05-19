@@ -9,7 +9,7 @@ export function randomCandidates() {
 
 export async function getCandidates(): Promise<ResponseGetCandidates> {
 	try {
-		let res: ResponseGetCandidates = await invoke('get_candidate_data');
+		const res: ResponseGetCandidates = await invoke('get_candidate_data');
 		return res;
 	} catch (error) {
 		console.error(error);
@@ -17,9 +17,9 @@ export async function getCandidates(): Promise<ResponseGetCandidates> {
 	}
 }
 
-export async function find_candidate_matches(): Promise<ResponseGetCandidates> {
+export async function find_candidate_matches(id: string): Promise<ResponseGetCandidates[]> {
 	try {
-		let res: ResponseGetCandidates = await invoke('find_candidate_matches', { id: 0 });
+		const res: ResponseGetCandidates[] = await invoke('find_candidate_matches', { id });
 		return res;
 	} catch (error) {
 		console.error(error);

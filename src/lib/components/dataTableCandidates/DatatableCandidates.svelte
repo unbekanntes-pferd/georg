@@ -6,7 +6,7 @@
 	import RowsPerPage from '$lib/components/dataTableCandidates/RowsPerPage.svelte';
 	import Pagination from '$lib/components/dataTableCandidates/Pagination.svelte';
 	import { DataHandler } from '@vincjo/datatables';
-	import type { Candidate, ChildCareRequest, ResponseGetCandidates } from '$lib/models/models';
+	import type { Candidate } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';
 	import TableRow from '$lib/components/dataTableCandidates/TableRow.svelte';
 	export let candidates: Candidate[];
