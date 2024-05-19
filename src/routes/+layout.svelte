@@ -8,6 +8,7 @@
 	import { initializeStores, Drawer } from '@skeletonlabs/skeleton';
 	import LeftSideBar from '$lib/components/LeftSideBar.svelte';
 	import CandidateDrawer from '$lib/components/CandidateDrawer.svelte';
+	import logo from "$lib/assets/georg_logo.png";
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	initializeStores();
@@ -38,7 +39,8 @@
 			</svelte:fragment>
 
 			<svelte:fragment slot="trail"
-				><strong class="text-xl uppercase">Georg</strong></svelte:fragment
+				>
+				<img src={logo} alt="georg-logo" class="w-8"></svelte:fragment
 			>
 		</AppBar>
 	</svelte:fragment>
