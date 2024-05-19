@@ -6,7 +6,7 @@
 		type ResponseGetCandidates
 
 	} from '$lib/models/models';
-	import { find_candidate_matches } from '$lib/data/data';
+	import { findCandidateMatches } from '$lib/data/data';
 
 	const drawerStore = getDrawerStore();
 	export let candidate: Candidate;
@@ -22,7 +22,7 @@
 
 	async function getMatches(id: string) {
 		isOpenMatches = !isOpenMatches;
-		matches = await find_candidate_matches(id);
+		matches = await findCandidateMatches(id);
 		drawerSettings.meta = {
 			matches
 		};

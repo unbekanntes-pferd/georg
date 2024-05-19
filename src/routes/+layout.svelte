@@ -9,6 +9,7 @@
 	import LeftSideBar from '$lib/components/LeftSideBar.svelte';
 	import CandidateDrawer from '$lib/components/CandidateDrawer.svelte';
 	import logo from "$lib/assets/georg_logo.png";
+	import ChildDrawer from '$lib/components/ChildDrawer.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	initializeStores();
@@ -24,7 +25,10 @@
 <Drawer>
 	{#if $drawerStore.id === 'matchCandidatesToChildCareRequests'}
 		<CandidateDrawer />
+	{:else if $drawerStore.id === 'matchChildCareRequestsToCandidates'}
+		<ChildDrawer />
 	{/if}
+
 </Drawer>
 
 <!-- App Shell -->

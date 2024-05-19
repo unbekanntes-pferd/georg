@@ -40,6 +40,11 @@ export interface ResponseGetCandidateMatches {
 	distance: number
 }
 
+export interface ResponseGetChildcareMatches {
+	candidate: Candidate,
+	distance: number
+}
+
 
 
 function getRandomElement<T>(items: T[]): T {
