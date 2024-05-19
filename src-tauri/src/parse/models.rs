@@ -143,6 +143,23 @@ pub struct ChildCareRequestResponse {
     pub notes: Option<String>,
 }
 
+impl ChildCareRequestResponse {
+    #[cfg(test)]
+    pub fn new_mock(id: &str, loc: &str) -> Self {
+        Self {
+            id: id.to_string(),
+            institution: "Kita Mockinghausen".to_string(),
+            location: loc.to_string(),
+            grade: "Klasse 1".to_string(),
+            hours: "8".to_string(),
+            diagnosis: Some("ADHS".to_string()),
+            contact: "Frau Mock".to_string(),
+            received_at: None,
+            notes: None,
+    }
+}
+}
+
 impl From<ChildCareRequest> for ChildCareRequestResponse {
     fn from(req: ChildCareRequest) -> Self {
         let unique_factors = format!("{}:{}", req.institution, req.location);
@@ -189,11 +206,17 @@ impl CandidateRequests {
         let cand_3 = CandidateResponse::new_mock("3", "Kareth");
         let cand_4 = CandidateResponse::new_mock("4", "Maxhütte");
 
+        let req_1 = ChildCareRequestResponse::new_mock("1", "Berlin");
+        let req_2 = ChildCareRequestResponse::new_mock("2", "Regensburg");
+        let req_3 = ChildCareRequestResponse::new_mock("3", "Kareth");
+        let req_4 = ChildCareRequestResponse::new_mock("4", "Maxhütte");
+
         let candidates = vec![cand_1, cand_2, cand_3, cand_4];
+        let child_care_requests = vec![req_1, req_2, req_3, req_4];
 
         Self {
             candidates,
-            child_care_requests: vec![],
+            child_care_requests,
         }
     }
 }
