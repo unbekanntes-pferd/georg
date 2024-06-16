@@ -84,7 +84,7 @@ export interface ResponseGetAssistantsAndAccompaniedChildren {
 }
 
 export interface ResponseGetSchoolAssistantMatches {
-	child: AccompaniedChild,
+	assistant: SchoolAssistant,
 	distance: number
 }
 
@@ -97,6 +97,14 @@ export interface ResponseGetAccompaniedChildMatches {
 
 function getRandomElement<T>(items: T[]): T {
 	return items[Math.floor(Math.random() * items.length)];
+}
+
+export function getFullName(assistant: SchoolAssistant): string {
+	return `${assistant.firstName} ${assistant.lastName}`;
+}
+
+export function getFullAddress(assistant: SchoolAssistant): string {
+	return `${assistant.streetHouseNumber}, ${assistant.postalCode} ${assistant.city}`;
 }
 
 export function randomizeCandidate(): Candidate {
@@ -204,4 +212,20 @@ export function generateAccompaniedChildren(count: number): AccompaniedChild[] {
 		children.push(randomizeAccompaniedChild());
 	}
 	return children;
+}
+
+export function randomizeSchoolAssistantMatches(assistant: SchoolAssistant): ResponseGetSchoolAssistantMatches {
+	return {
+		assistant,
+		distance: faker.number.int({ min: 0, max: 100 })
+	};
+}
+
+export function generateSchoolAssistantMatches(schoolAssistants: SchoolAssistant[]): ResponseGetSchoolAssistantMatches[] {
+	const matches: ResponseGetSchoolAssistantMatches[] = [];
+	for (let i = 0; i < schoolAssistants.length; i++) {
+		matches.push(randomizeSchoolAssistantMatches(schoolAssistants[i]));
+	}
+	matches.sort((a, b) => a.distance - b.distance);
+	return matches;
 }
