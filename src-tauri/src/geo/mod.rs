@@ -99,7 +99,11 @@ pub fn find_assistant_matches(
         .lock()
         .expect("poisoned mutex")
         .iter()
-        .map(|(id, geo_code)| (id.clone(), geo_code.clone()))
+        .filter_map(|(option_id, geo_code)| if id == *option_id {
+            None
+        } else {
+            Some((option_id.clone(), geo_code.clone()))
+        })
         .collect();
 
     let target_geo_code = data
