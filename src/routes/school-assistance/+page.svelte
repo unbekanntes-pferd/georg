@@ -1,14 +1,14 @@
 <script lang="ts">
 	import DatatableSchoolAssistants from '$lib/components/datatables/DatatableSchoolAssistants.svelte';
 	import DatatableAccompaniedChildren from '$lib/components/datatables/DatatableAccompaniedChildren.svelte';
-	import { getSchoolAssistantsAndAccompaniedChildren } from '$lib/data/data';
+	import { getAssistantData } from '$lib/data/data';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
 	let tabSet: number = 0;
 </script>
 
 <div class="p-4">
-	{#await getSchoolAssistantsAndAccompaniedChildren()}
+	{#await getAssistantData()}
 		<p>Loading...</p>
 	{:then res}
 		<TabGroup>

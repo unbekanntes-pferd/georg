@@ -33,7 +33,7 @@ export async function findChildcareReqMatches(id: string): Promise<ResponseGetCh
 	}
 }
 
-export async function getSchoolAssistantsAndAccompaniedChildren() {
+export async function getAssistantData() {
 	try {
 	 	const res: ResponseGetSchoolAssistants = await invoke('get_assistant_data');
 		return res;
