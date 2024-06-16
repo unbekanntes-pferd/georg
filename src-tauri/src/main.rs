@@ -14,6 +14,7 @@ fn main() {
             parse::import_candidate_data,
             parse::import_assistant_data,
             parse::candidates::get_candidate_data,
+            parse::assistance::get_assistant_data,
             geo::find_candidate_matches,
             geo::find_childcare_req_matches,
             geo::find_assistant_matches,
