@@ -15,7 +15,7 @@ pub fn get_assistant_data(state: tauri::State<AppState>) -> Result<Vec<Assistant
 }
 
 pub (crate) fn parse_assistant_data(import_files: &ImportFiles) -> Result<Vec<AssistantResponse>, GeorgError> {
-    let path = &import_files.candidates_file;
+    let path = &import_files.assistants_file;
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     let assistants = parse_assistants(&mut workbook)?;
