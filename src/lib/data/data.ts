@@ -52,7 +52,7 @@ export async function getSchoolAssistantsAndAccompaniedChildren() {
 
 export async function findSchoolAssistantMatches(id: string) {
 	try {
-		const res: ResponseGetSchoolAssistantMatches = await invoke('find_school_assistant_matches', { id });
+		const res: ResponseGetSchoolAssistantMatches[] = await invoke('find_school_assistant_matches', { id });
 		return res;
 	} catch (error) {
 		console.error(error);
@@ -62,7 +62,7 @@ export async function findSchoolAssistantMatches(id: string) {
 
 export async function findAccompaniedChildrenMatches(id: string) {
 	try {
-		const res: ResponseGetChildcareMatches = await invoke('find_accompanied_children_matches', { id });
+		const res: ResponseGetChildcareMatches[] = await invoke('find_accompanied_children_matches', { id });
 		return res;
 	} catch (error) {
 		console.error(error);
