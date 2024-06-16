@@ -35,19 +35,19 @@
 		<td>{schoolAssistant.lastName ? schoolAssistant.lastName : '-'}</td>
 		<td>{schoolAssistant.firstName ? schoolAssistant.firstName : '-'}</td>
 		<td>{schoolAssistant.birthDate ? schoolAssistant.birthDate : '-'}</td>
-		<td>{schoolAssistant.accompanyingChild ? schoolAssistant.accompanyingChild : '-'}</td>
-		<td>{schoolAssistant.phone ? schoolAssistant.phone : '-'}</td>
-		<td>{schoolAssistant.mobile ? schoolAssistant.mobile : '-'}</td>
+		<td>{schoolAssistant.assignedChild ? schoolAssistant.assignedChild : '-'}</td>
+		<td>{schoolAssistant.telNumber ? schoolAssistant.telNumber : '-'}</td>
+		<td>{schoolAssistant.mobileNumber ? schoolAssistant.mobileNumber : '-'}</td>
 		<td>{schoolAssistant.email ? schoolAssistant.email : '-'}</td>
-		<td>{schoolAssistant.streetHouseNumber ? schoolAssistant.streetHouseNumber : '-'}</td>
-		<td>{schoolAssistant.postalCode ? schoolAssistant.postalCode : '-'}</td>
+		<td>{schoolAssistant.address ? schoolAssistant.address : '-'}</td>
+		<td>{schoolAssistant.zipCode ? schoolAssistant.zipCode : '-'}</td>
 		<td>{schoolAssistant.city ? schoolAssistant.city : '-'}</td>
 		<td>{schoolAssistant.level ? schoolAssistant.level : '-'}</td>
 		<td>{schoolAssistant.approved ? schoolAssistant.approved : '-'}</td>
 		<td>{schoolAssistant.info ? schoolAssistant.info : '-'}</td>
-		<td>{schoolAssistant.certificates ? schoolAssistant.certificates : '-'}</td>
-		<td>{schoolAssistant.professionalQualification ? schoolAssistant.professionalQualification : '-'}</td>
+		<td>{schoolAssistant.certifications ? schoolAssistant.certifications : '-'}</td>
+		<td>{schoolAssistant.title ? schoolAssistant.title : '-'}</td>
 		<td>{schoolAssistant.children ? schoolAssistant.children : '-'}</td>
-		<td>{schoolAssistant.membershipDate ? schoolAssistant.membershipDate : '-'}</td>
+		<td>{schoolAssistant.assitantSince ? schoolAssistant.assitantSince : '-'}</td>
 	</tr>
 </tbody>
