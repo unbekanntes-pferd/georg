@@ -12,8 +12,6 @@
 
 	const drawerStore = getDrawerStore();
 	let childCareRequests: ResponseGetChildcareMatches[] = $drawerStore.meta.matches;
-
-	console.log(childCareRequests);
 </script>
 
 <div class="p-4">
