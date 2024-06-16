@@ -42,7 +42,7 @@ pub struct Assistant {
     pub first_name: String,
     #[serde(rename(serialize = "birthDate", deserialize = "Geb.datum"))]
     pub birth_date: String,
-    #[serde(rename(serialize = "assignedChild", deserialize = "Begl.Kind"))]
+    #[serde(rename(serialize = "assignedChild", deserialize = "Begl. Kind"))]
     pub assigned_child: String,
     #[serde(rename(serialize = "telNumber", deserialize = "Telefon"))]
     pub tel_number: Option<String>,
@@ -53,7 +53,7 @@ pub struct Assistant {
     #[serde(rename(serialize = "address", deserialize = "Straße/Hausnummer"))]
     pub address: String,
     #[serde(rename(serialize = "zipCode", deserialize = "PLZ"))]
-    pub zip_code: String,
+    pub zip_code: f32,
     #[serde(rename(serialize = "city", deserialize = "Wohnort"))]
     pub city: String,
     #[serde(rename(serialize = "level", deserialize = "Eingr."))]
@@ -87,7 +87,7 @@ pub struct AssistantResponse {
     pub mobile_number: Option<String>,
     pub email: Option<String>,
     pub address: String,
-    pub zip_code: String,
+    pub zip_code: f32,
     pub city: String,
     pub level: String,
     pub approved: String,

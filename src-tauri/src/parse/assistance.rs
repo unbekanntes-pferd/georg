@@ -19,6 +19,7 @@ pub (crate) fn parse_assistant_data(import_files: &ImportFiles) -> Result<Vec<As
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     let assistants = parse_assistants(&mut workbook)?;
+    eprintln!("Assistants: {:?}", assistants);
     let assistants = assistants.into_iter().map(|c| c.into()).collect();
 
     Ok(assistants)
@@ -28,15 +29,34 @@ fn parse_assistants(work_book: &mut Xlsx<BufReader<File>>) -> Result<Vec<Assista
     let mut assistants = Vec::new();
     let sheet = work_book.worksheet_range(ASSISTANTS_SHEET_NAME)?;
 
+    eprintln!("Sheet: {:?}",  sheet);
+
     let de = RangeDeserializerBuilder::new()
         .from_range(&sheet)
-        .map_err(|_| GeorgError::MissingCandidatesFile)?;
+        .map_err(|_| GeorgError::MissingAssistantsFile)?;
 
     for row in de {
-        if let Ok(assistant) = row.map_err(|_| GeorgError::InvalidAssistant) {
+        if let Ok(assistant) = row.map_err(|err| {dbg!(err); GeorgError::InvalidAssistant}) {
             assistants.push(assistant);
         }
     }
 
     Ok(assistants)
+}
+
+#[cfg(test)]
+mod tests {
+    use std::path::Path;
+
+    use crate::parse::get_import_files;
+
+    use super::*;
+
+    #[test]
+    fn test_parse_assistants() {
+        let import_files = get_import_files(Path::new("src/tests")).unwrap();
+        let assistants = parse_assistant_data(&import_files).unwrap();
+  
+        assert_eq!(assistants.len(), 4);
+    }
 }
