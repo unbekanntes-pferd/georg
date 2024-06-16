@@ -31,7 +31,7 @@ export interface ChildCareRequest {
 }
 
 export interface ResponseGetCandidates {
-	candidate: Candidate[];
+	candidates: Candidate[];
 	childCareRequests: ChildCareRequest[];
 }
 
