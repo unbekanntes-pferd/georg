@@ -3,12 +3,12 @@
 	import { getDrawerStore, type DrawerSettings } from '@skeletonlabs/skeleton';
 	import {
 		type ResponseGetSchoolAssistantMatches,
-		type SchoolAssistant
+		type Assistant
 	} from '$lib/models/models';
 	import { findSAssistantMatches } from '$lib/data/data';
 
 	const drawerStore = getDrawerStore();
-	export let schoolAssistant: SchoolAssistant;
+	export let schoolAssistant: Assistant;
 
 	let isOpenMatches = false;
 	let matches: ResponseGetSchoolAssistantMatches[];

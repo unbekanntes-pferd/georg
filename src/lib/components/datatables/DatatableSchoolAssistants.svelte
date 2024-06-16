@@ -6,15 +6,15 @@
 	import RowsPerPage from '$lib/components/datatables/RowsPerPage.svelte';
 	import Pagination from '$lib/components/datatables/Pagination.svelte';
 	import { DataHandler } from '@vincjo/datatables';
-	import type { SchoolAssistant } from '$lib/models/models';
+	import type { Assistant } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';
 	import TableRow from '$lib/components/datatables/TableRowSchoolassistants.svelte';
-	export let schoolAssistants: SchoolAssistant[];
+	export let schoolAssistants: Assistant[];
 
-	let handler: DataHandler<SchoolAssistant> = new DataHandler(schoolAssistants, {
+	let handler: DataHandler<Assistant> = new DataHandler(schoolAssistants, {
 		rowsPerPage: 10
 	});
-	let rows: Readable<SchoolAssistant[]> = handler.getRows();
+	let rows: Readable<Assistant[]> = handler.getRows();
 </script>
 
 {#if rows}

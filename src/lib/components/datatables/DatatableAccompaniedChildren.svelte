@@ -6,7 +6,7 @@
 	import RowsPerPage from '$lib/components/datatables/RowsPerPage.svelte';
 	import Pagination from '$lib/components/datatables/Pagination.svelte';
 	import { DataHandler } from '@vincjo/datatables';
-	import type { AccompaniedChild, SchoolAssistant } from '$lib/models/models';
+	import type { AccompaniedChild, Assistant } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';
 	import TableRow from '$lib/components/datatables/TableRowAccompaniedChildren.svelte';
 	export let accompaniedChildren: AccompaniedChild[];
