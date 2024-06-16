@@ -53,37 +53,14 @@ export interface SchoolAssistant {
 
 export interface AccompaniedChild {
 	id: string;
-    lastName: string;
-    firstName: string;
-    birthDate: Date;
-    startDate: Date;
-    diagnosis: string;
-    schoolAssistant: string;
-    grade: string;
-    institution: string;
-    institutionAddress: string;
-    institutionPostalCode: string;
-    institutionCity: string;
-    institutionPhone?: string;
-    institutionEmail?: string;
-    homeAddress: string;
-    homePostalCode: string;
-    homeCity: string;
-    homePhone: string;
-    parent1: string;
-    parent1Phone?: string;
-    parent1Email?: string;
-    parent2?: string;
-    parent2Phone?: string;
-    parent2Email?: string;
-    authorizedSupportScope: string;
-    qualification: string;
-    approvalUntil: string;
-    fundingAgency: string;
-    contactPerson?: string;
-    contactPhone?: string;
-    contactEmail?: string;
-    notes?: string;
+	name: string;
+	qualification: string;
+	approvalUntil: Date;
+	fundingAgency: string;
+	contactPerson: string;
+	contactPhone: string;
+	contactEmail: string;
+	notes: string;
 }
 
 export interface ResponseGetCandidates {
@@ -210,32 +187,9 @@ export function generateSchoolAssistants(count: number): SchoolAssistant[] {
 export function randomizeAccompaniedChild(): AccompaniedChild {
 	return {
 		id: faker.string.uuid(),
-		lastName: faker.person.lastName(),
-		firstName: faker.person.firstName(),
-		birthDate: faker.date.past(),
-		startDate: faker.date.past(),
-		diagnosis: faker.lorem.sentence(),
-		schoolAssistant: faker.person.fullName(),
-		grade: faker.number.int({ min: 0, max: 5 }).toString(),
-		institution: faker.company.name(),
-		institutionAddress: faker.location.streetAddress(),
-		institutionPostalCode: faker.location.zipCode(),
-		institutionCity: faker.location.city(),
-		institutionPhone: faker.phone.number(),
-		institutionEmail: faker.internet.email(),
-		homeAddress: faker.location.streetAddress(),
-		homePostalCode: faker.location.zipCode(),
-		homeCity: faker.location.city(),
-		homePhone: faker.phone.number(),
-		parent1: faker.person.fullName(),
-		parent1Phone: faker.phone.number(),
-		parent1Email: faker.internet.email(),
-		parent2: faker.person.fullName(),
-		parent2Phone: faker.phone.number(),
-		parent2Email: faker.internet.email(),
-		authorizedSupportScope: faker.lorem.sentence(),
-		qualification: faker.lorem.sentence(),
-		approvalUntil: faker.date.future().toString(),
+		name: faker.person.fullName(),
+		qualification: getRandomElement(['Primary', 'Secondary', 'High']),
+		approvalUntil: faker.date.future(),
 		fundingAgency: faker.company.name(),
 		contactPerson: faker.person.fullName(),
 		contactPhone: faker.phone.number(),
