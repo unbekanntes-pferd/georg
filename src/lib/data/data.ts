@@ -1,6 +1,7 @@
 import { type ResponseGetAccompaniedChildMatches, type ResponseGetChildcareMatches, type ResponseGetSchoolAssistantMatches, type Assistant } from '$lib/models/models';
 import { invoke } from '@tauri-apps/api';
 import { type ResponseGetCandidates } from '$lib/models/models';
+import type { Command } from '$lib/stores/path';
 
 export async function getCandidates(): Promise<ResponseGetCandidates> {
 	try {
@@ -64,3 +65,13 @@ export async function findAccompaniedChildrenMatches(id: string) {
 		throw error;
 	}
 }
+
+export async function invokePathCommand(command: Command, path: string) {
+	try {
+		await invoke(command, { path });
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+

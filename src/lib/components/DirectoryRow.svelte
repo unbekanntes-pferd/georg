@@ -1,17 +1,17 @@
 <script lang="ts">
     import { open } from '@tauri-apps/api/dialog';
 	import { invoke } from '@tauri-apps/api/tauri';
-	import { Command, State, type DirectoryPathCommand } from './directoryTableModals';
 	import ClarityDirectorySolid from '~icons/clarity/directory-solid';
 	import MaterialSymbolsDirectorySyncRounded from '~icons/material-symbols/directory-sync-rounded';
 	import { onMount } from 'svelte';
+	import { State, setPath, setPathState, type ExcelPathCommand } from '$lib/stores/path';
+	import { invokePathCommand } from '$lib/data/data';
     
-    export let row: DirectoryPathCommand;
+    export let row: ExcelPathCommand;
     
     let loading = false;
 
-    // todo save path on backend and check if path was given prior to opening directory 
-    async function handleOpenDirectory(directory: DirectoryPathCommand) {
+    async function handleOpenDirectory(directory: ExcelPathCommand) {
 		const selectedDirectory = await open({
 			directory: true,
 			multiple: false
@@ -19,24 +19,22 @@
 
 		if (selectedDirectory === null) {
 			// user cancelled the selection
-		} else {
-            loading = true;
-			invoke(directory.command, {
-				path: selectedDirectory
-			})
-				.then((_message) => {
-					if (!Array.isArray(selectedDirectory)) {
-                        row.path = selectedDirectory;
-                        row.state = State.Ok;
-					}
-				})
-				.catch((error) => {
-					row.state = State.Error;
-					console.error(error);
-				}).finally(() => {
-                    loading = false;
-                })
-		}
+        } else {
+            try {
+                loading = true;
+                await invokePathCommand(directory.command, selectedDirectory as string)
+                
+                if (!Array.isArray(selectedDirectory)) {
+                    setPath(row.fileName, selectedDirectory)
+                    setPathState(row.fileName, State.Ok)
+                }
+            } catch (error) {
+                setPathState(row.fileName, State.Error)
+                console.error(error);
+            } finally {
+                loading = false;
+            }
+        }
 	}
     // check on mounting if path was saved in backend
     onMount(() => {
@@ -46,8 +44,9 @@
 
 
 <tr>
+    {#key loading}
     <td>{row.fileName}</td>
-    {#if row.path}
+    {#if row.path && !loading}
         <td class="flex flew-row"
             >{row.path}
             <button
@@ -75,12 +74,13 @@
             ></td
         >
     {/if}
+    {/key}
     <td>
-        {#if row.state === State.Ok}
+        {#if row.state === State.Ok && !loading}
             <span class="text-green-500">OK</span>
         {:else if row.state === State.Error}
             <span class="text-red-500">Fehler</span>
-        {:else}
+        {:else if loading }
             <span class="text-yellow-500">Ausstehend</span>
         {/if}
     </td>

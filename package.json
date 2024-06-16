@@ -49,6 +49,7 @@
 	"dependencies": {
 		"@floating-ui/dom": "1.6.5",
 		"@tauri-apps/api": "^1.5.5",
-		"@vincjo/datatables": "^1.14.5"
+		"@vincjo/datatables": "^1.14.5",
+		"svelte-persisted-store": "^0.11.0"
 	}
 }
