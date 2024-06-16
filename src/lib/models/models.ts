@@ -30,6 +30,60 @@ export interface ChildCareRequest {
 	notes: string | null;
 }
 
+export interface SchoolAssistant {
+    lastName: string;
+    firstName: string;
+    birthDate: Date;
+    accompanyingChild: string;
+    phone?: string;
+    mobile?: string;
+    email: string;
+    streetHouseNumber: string;
+    postalCode: string;
+    city: string;
+    level: string;
+    approved: string;
+    info?: string;
+    certificates: string;
+    professionalQualification: string;
+    children: string;
+    membershipDate: Date;
+}
+
+export interface AccompaniedChild {
+    lastName: string;
+    firstName: string;
+    birthDate: Date;
+    startDate: Date;
+    diagnosis: string;
+    schoolAssistant: string;
+    grade: string;
+    institution: string;
+    institutionAddress: string;
+    institutionPostalCode: string;
+    institutionCity: string;
+    institutionPhone?: string;
+    institutionEmail?: string;
+    homeAddress: string;
+    homePostalCode: string;
+    homeCity: string;
+    homePhone: string;
+    parent1: string;
+    parent1Phone?: string;
+    parent1Email?: string;
+    parent2?: string;
+    parent2Phone?: string;
+    parent2Email?: string;
+    authorizedSupportScope: string;
+    qualification: string;
+    approvalUntil: string;
+    fundingAgency: string;
+    contactPerson?: string;
+    contactPhone?: string;
+    contactEmail?: string;
+    notes?: string;
+}
+
 export interface ResponseGetCandidates {
 	candidates: Candidate[];
 	childCareRequests: ChildCareRequest[];
@@ -42,6 +96,21 @@ export interface ResponseGetCandidateMatches {
 
 export interface ResponseGetChildcareMatches {
 	candidate: Candidate,
+	distance: number
+}
+
+export interface ResponseGetAssistantsAndAccompaniedChildren {
+	assistants: SchoolAssistant[];
+	children: AccompaniedChild[];
+}
+
+export interface ResponseGetSchoolAssistantMatches {
+	assistant: AccompaniedChild,
+	distance: number
+}
+
+export interface ResponseGetAccompaniedChildMatches {
+	child: SchoolAssistant,
 	distance: number
 }
 
@@ -103,4 +172,78 @@ export function generateChildCareRequests(count: number): ChildCareRequest[] {
 		requests.push(randomizeChildCareRequest());
 	}
 	return requests;
+}
+
+export function randomizeSchoolAssistant(): SchoolAssistant {
+	return {
+		lastName: faker.person.lastName(),
+		firstName: faker.person.firstName(),
+		birthDate: faker.date.past(),
+		accompanyingChild: faker.person.fullName(),
+		phone: faker.phone.number(),
+		mobile: faker.phone.number(),
+		email: faker.internet.email(),
+		streetHouseNumber: faker.location.streetAddress(),
+		postalCode: faker.location.zipCode(),
+		city: faker.location.city(),
+		level: getRandomElement(['Primary', 'Secondary', 'High']),
+		approved: getRandomElement(['Yes', 'No']),
+		info: faker.lorem.sentence(),
+		certificates: faker.lorem.sentence(),
+		professionalQualification: faker.lorem.sentence(),
+		children: faker.lorem.sentence(),
+		membershipDate: faker.date.past()
+	};
+}
+
+export function generateSchoolAssistants(count: number): SchoolAssistant[] {
+	const assistants: SchoolAssistant[] = [];
+	for (let i = 0; i < count; i++) {
+		assistants.push(randomizeSchoolAssistant());
+	}
+	return assistants;
+}
+
+export function randomizeAccompaniedChild(): AccompaniedChild {
+	return {
+		lastName: faker.person.lastName(),
+		firstName: faker.person.firstName(),
+		birthDate: faker.date.past(),
+		startDate: faker.date.past(),
+		diagnosis: faker.lorem.sentence(),
+		schoolAssistant: faker.person.fullName(),
+		grade: faker.number.int({ min: 0, max: 5 }).toString(),
+		institution: faker.company.name(),
+		institutionAddress: faker.location.streetAddress(),
+		institutionPostalCode: faker.location.zipCode(),
+		institutionCity: faker.location.city(),
+		institutionPhone: faker.phone.number(),
+		institutionEmail: faker.internet.email(),
+		homeAddress: faker.location.streetAddress(),
+		homePostalCode: faker.location.zipCode(),
+		homeCity: faker.location.city(),
+		homePhone: faker.phone.number(),
+		parent1: faker.person.fullName(),
+		parent1Phone: faker.phone.number(),
+		parent1Email: faker.internet.email(),
+		parent2: faker.person.fullName(),
+		parent2Phone: faker.phone.number(),
+		parent2Email: faker.internet.email(),
+		authorizedSupportScope: faker.lorem.sentence(),
+		qualification: faker.lorem.sentence(),
+		approvalUntil: faker.date.future().toString(),
+		fundingAgency: faker.company.name(),
+		contactPerson: faker.person.fullName(),
+		contactPhone: faker.phone.number(),
+		contactEmail: faker.internet.email(),
+		notes: faker.lorem.sentence()
+	};
+}
+
+export function generateAccompaniedChildren(count: number): AccompaniedChild[] {
+	const children: AccompaniedChild[] = [];
+	for (let i = 0; i < count; i++) {
+		children.push(randomizeAccompaniedChild());
+	}
+	return children;
 }
