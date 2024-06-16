@@ -28,25 +28,25 @@ export interface ChildCareRequest {
 	notes: string | null;
 }
 
-export interface SchoolAssistant {
+export interface Assistant {
 	id: string;
     lastName: string;
     firstName: string;
     birthDate: Date;
-    accompanyingChild: string;
-    phone?: string;
-    mobile?: string;
+    assignedChild: string;
+    telNumber?: string;
+    mobileNumber?: string;
     email: string;
-    streetHouseNumber: string;
-    postalCode: string;
+    address: string;
+    zipCode: number;
     city: string;
     level: string;
     approved: string;
     info?: string;
-    certificates: string;
-    professionalQualification: string;
+    certifications: string;
+    title: string;
     children: string;
-    membershipDate: Date;
+    assitantSince: string;
 }
 
 export interface AccompaniedChild {
@@ -77,29 +77,29 @@ export interface ResponseGetChildcareMatches {
 }
 
 export interface ResponseGetSchoolAssistants {
-	assistants: SchoolAssistant[];
+	assistants: Assistant[];
 }
 
 export interface ResponseGetAssistantsAndAccompaniedChildren {
-	assistants: SchoolAssistant[];
+	assistants: Assistant[];
 	children: AccompaniedChild[];
 }
 
 export interface ResponseGetSchoolAssistantMatches {
-	assistant: SchoolAssistant,
+	assistant: Assistant,
 	distance: number
 }
 
 export interface ResponseGetAccompaniedChildMatches {
-	assistant: SchoolAssistant,
+	assistant: Assistant,
 	distance: number
 }
 
-export function getFullName(assistant: SchoolAssistant): string {
+export function getFullName(assistant: Assistant): string {
 	return `${assistant.firstName} ${assistant.lastName}`;
 }
 
-export function getFullAddress(assistant: SchoolAssistant): string {
-	return `${assistant.streetHouseNumber}, ${assistant.postalCode} ${assistant.city}`;
+export function getFullAddress(assistant: Assistant): string {
+	return `${assistant.address}, ${assistant.zipCode} ${assistant.city}`;
 }
 
