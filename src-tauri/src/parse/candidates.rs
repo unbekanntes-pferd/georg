@@ -63,7 +63,8 @@ fn parse_child_care_requests(
     Ok(child_care_requests)
 }
 
-pub fn sync_candidate_data(data: CandidateRequests) -> Result<(), GeorgError> {
+#[allow(dead_code)]
+pub fn sync_candidate_data(_data: CandidateRequests) -> Result<(), GeorgError> {
     todo!()
 }
 

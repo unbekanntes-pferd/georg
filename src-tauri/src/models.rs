@@ -1,9 +1,12 @@
-use std::{collections::HashMap, sync::{Arc, Mutex}};
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+};
 
 use haversine::Location;
 use photon_geocoding::{filter::ForwardFilter, PhotonApiClient};
 
-use crate::parse::CandidateRequests;
+use crate::parse::{AssistantResponse, CandidateRequests};
 
 #[derive(thiserror::Error, Debug)]
 pub enum GeorgError {
@@ -13,8 +16,14 @@ pub enum GeorgError {
     Xlsx(#[from] calamine::XlsxError),
     #[error("Missing candidates file")]
     MissingCandidatesFile,
+    #[error("Missing assistants file")]
+    MissingAssistantsFile,
+    #[error("Missing assistance overview file")]
+    MissingAssistanceOverviewFile,
     #[error("Invalid candidate data")]
     InvalidCandidate,
+    #[error("Invalid assistant data")]
+    InvalidAssistant,
     #[error("Unknown error")]
     Unknown,
     #[error("Missing geo code")]
@@ -29,10 +38,7 @@ pub struct GeoCode {
 
 impl GeoCode {
     pub fn new(lat: f64, lon: f64) -> Self {
-        Self {
-            lat,
-            lon,
-        }
+        Self { lat, lon }
     }
 }
 
@@ -46,10 +52,12 @@ impl From<GeoCode> for Location {
 }
 
 pub struct GeorgState {
-    pub candidate_requests: Mutex<CandidateRequests>,
     photon_api_client: PhotonApiClient,
+    pub candidate_requests: Mutex<CandidateRequests>,
+    pub assistant_data: Mutex<Vec<AssistantResponse>>,
     pub candidates_geo_codes: Mutex<HashMap<String, GeoCode>>,
     pub req_geo_codes: Mutex<HashMap<String, GeoCode>>,
+    pub assistant_geo_codes: Mutex<HashMap<String, GeoCode>>,
 }
 
 pub struct AppState(Arc<GeorgState>);
@@ -69,20 +77,27 @@ impl GeorgState {
         let candidate_requests = CandidateRequests::new(vec![], vec![]);
         let client = PhotonApiClient::default();
         Self {
+            photon_api_client: client,
             candidate_requests: Mutex::new(candidate_requests),
+            assistant_data: Mutex::new(Vec::new()),
             candidates_geo_codes: Mutex::new(HashMap::new()),
             req_geo_codes: Mutex::new(HashMap::new()),
-            photon_api_client: client,
+            assistant_geo_codes: Mutex::new(HashMap::new()),
         }
     }
 
-    pub fn update(&self, candidate_requests: CandidateRequests) {
+    pub fn update_candidate_reqs(&self, candidate_requests: CandidateRequests) {
         *self.candidate_requests.lock().expect("poisoned mutex") = candidate_requests;
+    }
+
+    pub fn update_assistant_data(&self, assistants_data: Vec<AssistantResponse>) {
+        *self.assistant_data.lock().expect("poisoned mutex") = assistants_data;
     }
 
     pub fn set_geo_codes(&self) -> Result<(), GeorgError> {
         let mut geo_codes = self.candidates_geo_codes.lock().expect("poisoned mutex");
         let candidate_reqs = self.candidate_requests.lock().expect("poisoned mutex");
+        let assistant_data = self.assistant_data.lock().expect("poisoned mutex");
 
         for candidate in candidate_reqs.candidates.iter() {
             let geo_code = self.get_geo_code(&candidate.location)?;
@@ -95,33 +110,38 @@ impl GeorgState {
             let geo_code = self.get_geo_code(&req.location)?;
             req_geo_codes.insert(req.id.clone(), geo_code);
         }
-  
+
+        let mut assistant_geo_codes = self.assistant_geo_codes.lock().expect("poisoned mutex");
+
+        for assistant in assistant_data.iter() {
+            let geo_code = self.get_geo_code(&assistant.get_address())?;
+            assistant_geo_codes.insert(assistant.id.clone(), geo_code);
+        }
+
         Ok(())
     }
 
     fn get_geo_code(&self, search: &str) -> Result<GeoCode, GeorgError> {
+        let filter = ForwardFilter::new().limit(1).language("de");
 
-        let filter = ForwardFilter::new()
-            .limit(1)
-            .language("de");
-        
-
-        let geo_code_results = self.photon_api_client.forward_search(search, Some(filter)).map_err(|err| {
-            dbg!(err);
-            GeorgError::Unknown
-        })?;
+        let geo_code_results = self
+            .photon_api_client
+            .forward_search(search, Some(filter))
+            .map_err(|err| {
+                dbg!(err);
+                GeorgError::Unknown
+            })?;
 
         if geo_code_results.is_empty() {
             return Err(GeorgError::Unknown);
         }
 
-        let geo_code = geo_code_results.first().expect("no geo code found - checked before");
+        let geo_code = geo_code_results
+            .first()
+            .expect("no geo code found - checked before");
 
         Ok(GeoCode::new(geo_code.coords.lat, geo_code.coords.lon))
-
     }
-
-
 }
 
 #[cfg(test)]
@@ -131,16 +151,18 @@ mod tests {
     use super::GeorgState;
 
     #[test]
-    fn test_set_geo_codes() {
+    fn test_set_candidates_geo_codes() {
         let state = GeorgState::new();
         let candidate_requests = CandidateRequests::new_mock();
-        state.update(candidate_requests);
+        state.update_candidate_reqs(candidate_requests);
         state.set_geo_codes().unwrap();
 
         let candidates_geo_codes = state.candidates_geo_codes.lock().expect("poisoned mutex");
 
         assert_eq!(candidates_geo_codes.len(), 4);
 
-        assert!(candidates_geo_codes.values().all(|geo_code| geo_code.lat != 0.0 && geo_code.lon != 0.0));
+        assert!(candidates_geo_codes
+            .values()
+            .all(|geo_code| geo_code.lat != 0.0 && geo_code.lon != 0.0));
     }
 }
