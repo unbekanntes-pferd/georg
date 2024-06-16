@@ -31,6 +31,7 @@ export interface ChildCareRequest {
 }
 
 export interface SchoolAssistant {
+	id: string;
     lastName: string;
     firstName: string;
     birthDate: Date;
@@ -51,6 +52,7 @@ export interface SchoolAssistant {
 }
 
 export interface AccompaniedChild {
+	id: string;
     lastName: string;
     firstName: string;
     birthDate: Date;
@@ -176,6 +178,7 @@ export function generateChildCareRequests(count: number): ChildCareRequest[] {
 
 export function randomizeSchoolAssistant(): SchoolAssistant {
 	return {
+		id: faker.string.uuid(),
 		lastName: faker.person.lastName(),
 		firstName: faker.person.firstName(),
 		birthDate: faker.date.past(),
@@ -206,6 +209,7 @@ export function generateSchoolAssistants(count: number): SchoolAssistant[] {
 
 export function randomizeAccompaniedChild(): AccompaniedChild {
 	return {
+		id: faker.string.uuid(),
 		lastName: faker.person.lastName(),
 		firstName: faker.person.firstName(),
 		birthDate: faker.date.past(),
