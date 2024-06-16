@@ -1,22 +1,9 @@
 <script lang="ts">
-	import { Command, State, type DirectoryPathCommand } from './directoryTableModals';
-	import DirectoryRow from './DirectoryRow.svelte';
+	import { get } from 'svelte/store'
+	import { excelPathCommandStore, type ExcelPathCommand } from '$lib/stores/path';
+	import DirectoryRow from './DirectoryRow.svelte';	
 
-	let candidates = {
-		fileName: 'Bewerbungen und Anfragen_Begleitungen.xlsx',
-		path: null,
-		command: Command.CandidatesAndChildCareRequests,
-		state: State.Tbd
-	};
-
-	let schoolAssistants = {
-		fileName: 'Daten der SchulbegleiterInnen_Test Dracoon.xlsx',
-		path: null,
-		command: Command.SchoolAssistants,
-		state: State.Tbd
-	}
-
-	let directories: DirectoryPathCommand[] = [candidates, schoolAssistants];
+	let directories: ExcelPathCommand[] = get(excelPathCommandStore).directories
 
 	
 </script>

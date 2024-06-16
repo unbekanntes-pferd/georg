@@ -4,7 +4,7 @@
 	import FeBar from '~icons/fe/bar';
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
+	import { storePopup, Toast  } from '@skeletonlabs/skeleton';
 	import { initializeStores, Drawer } from '@skeletonlabs/skeleton';
 	import LeftSideBar from '$lib/components/LeftSideBar.svelte';
 	import CandidateDrawer from '$lib/components/drawers/CandidateDrawer.svelte';
@@ -21,7 +21,12 @@
 		isHiddenSidebar = !isHiddenSidebar;
 	}
 	const drawerStore = getDrawerStore();
+
+	
+
 </script>
+
+<Toast />
 
 <Drawer>
 	{#if $drawerStore.id === 'matchCandidatesToChildCareRequests'}
