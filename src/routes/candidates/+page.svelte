@@ -1,6 +1,6 @@
 <script lang="ts">
-	import DatatableCandidates from '$lib/components/dataTableCandidates/DatatableCandidates.svelte';
-	import DatatableChildren from '$lib/components/dataTableChildren/DatatableChildren.svelte';
+	import DatatableCandidates from '$lib/components/datatables/DatatableCandidates.svelte';
+	import DatatableChildren from '$lib/components/datatables/DatatableChildren.svelte';
 	import { getCandidates } from '$lib/data/data';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 
