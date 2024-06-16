@@ -1,14 +1,14 @@
 <script lang="ts">
-	import Search from '$lib/components/dataTableCandidates/Search.svelte';
-	import ThFilter from '$lib/components/dataTableCandidates/ThFilter.svelte';
-	import ThSort from '$lib/components/dataTableCandidates/ThSort.svelte';
-	import RowCount from '$lib/components/dataTableCandidates/RowCount.svelte';
-	import RowsPerPage from '$lib/components/dataTableCandidates/RowsPerPage.svelte';
-	import Pagination from '$lib/components/dataTableCandidates/Pagination.svelte';
+	import Search from '$lib/components/datatables/Search.svelte';
+	import ThFilter from '$lib/components/datatables/ThFilter.svelte';
+	import ThSort from '$lib/components/datatables/ThSort.svelte';
+	import RowCount from '$lib/components/datatables/RowCount.svelte';
+	import RowsPerPage from '$lib/components/datatables/RowsPerPage.svelte';
+	import Pagination from '$lib/components/datatables/Pagination.svelte';
 	import { DataHandler } from '@vincjo/datatables';
 	import type { Candidate } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';
-	import TableRow from '$lib/components/dataTableCandidates/TableRow.svelte';
+	import TableRow from '$lib/components/datatables/TableRowCandidates.svelte';
 	export let candidates: Candidate[];
 
 	let handler: DataHandler<Candidate> = new DataHandler(candidates, {

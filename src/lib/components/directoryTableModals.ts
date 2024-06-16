@@ -6,7 +6,8 @@ export interface DirectoryPathCommand {
 }
 
 export enum Command {
-	CandidatesAndChildCareRequests = 'import_candidate_data'
+	CandidatesAndChildCareRequests = 'import_candidate_data',
+	SchoolAssistants ='import_assistant_data',
 }
 
 export enum State {

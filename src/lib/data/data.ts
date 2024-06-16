@@ -1,11 +1,6 @@
-import { generateCandidates, type ResponseGetChildcareMatches } from '$lib/models/models';
+import { type ResponseGetAccompaniedChildMatches, type ResponseGetChildcareMatches, type ResponseGetSchoolAssistantMatches, type ResponseGetSchoolAssistants } from '$lib/models/models';
 import { invoke } from '@tauri-apps/api';
 import { type ResponseGetCandidates } from '$lib/models/models';
-
-// used to generate random data
-export function randomCandidates() {
-	return generateCandidates(100);
-}
 
 export async function getCandidates(): Promise<ResponseGetCandidates> {
 	try {
@@ -31,6 +26,38 @@ export async function findCandidateMatches(id: string): Promise<ResponseGetCandi
 export async function findChildcareReqMatches(id: string): Promise<ResponseGetChildcareMatches[]> {
 	try {
 		const res: ResponseGetChildcareMatches[] = await invoke('find_childcare_req_matches', { id });
+		return res;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+export async function getSchoolAssistantsAndAccompaniedChildren() {
+	try {
+	 	const res: ResponseGetSchoolAssistants = await invoke('get_assistant_data');
+		return res;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+
+
+export async function findSAssistantMatches(id: string) {
+	try {
+		const res: ResponseGetSchoolAssistantMatches[] = await invoke('find_assistant_matches', { id });
+		return res;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
+export async function findAccompaniedChildrenMatches(id: string) {
+	try {
+		const res: ResponseGetAccompaniedChildMatches[] = await invoke('find_accompanied_children_matches', { id });
 		return res;
 	} catch (error) {
 		console.error(error);

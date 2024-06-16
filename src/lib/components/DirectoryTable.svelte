@@ -9,7 +9,14 @@
 		state: State.Tbd
 	};
 
-	let directories: DirectoryPathCommand[] = [candidates];
+	let schoolAssistants = {
+		fileName: 'Daten der SchulbegleiterInnen_Test Dracoon.xlsx',
+		path: null,
+		command: Command.SchoolAssistants,
+		state: State.Tbd
+	}
+
+	let directories: DirectoryPathCommand[] = [candidates, schoolAssistants];
 
 	
 </script>

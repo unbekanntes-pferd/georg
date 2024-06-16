@@ -1,12 +1,12 @@
 <script lang="ts">
-	import RowCount from '$lib/components/dataTableCandidates/RowCount.svelte';
-	import RowsPerPage from '$lib/components/dataTableCandidates/RowsPerPage.svelte';
-	import Pagination from '$lib/components/dataTableCandidates/Pagination.svelte';
+	import RowCount from '$lib/components/datatables/RowCount.svelte';
+	import RowsPerPage from '$lib/components/datatables/RowsPerPage.svelte';
+	import Pagination from '$lib/components/datatables/Pagination.svelte';
 	import { DataHandler } from '@vincjo/datatables';
 	import type { ChildCareRequest } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';
-	import TableRow from './TableRow.svelte';
-	import Search from '../dataTableCandidates/Search.svelte';
+	import TableRow from '$lib/components/datatables/TableRowChildren.svelte';
+	import Search from '$lib/components/datatables/Search.svelte';
 
 	export let childCareRequests: ChildCareRequest[];
 	console.log(childCareRequests);

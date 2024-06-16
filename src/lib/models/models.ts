@@ -1,5 +1,3 @@
-import { fakerDE as faker } from '@faker-js/faker';
-
 export interface Candidate {
 	id: string;
 	name: string;
@@ -30,6 +28,39 @@ export interface ChildCareRequest {
 	notes: string | null;
 }
 
+export interface SchoolAssistant {
+	id: string;
+    lastName: string;
+    firstName: string;
+    birthDate: Date;
+    accompanyingChild: string;
+    phone?: string;
+    mobile?: string;
+    email: string;
+    streetHouseNumber: string;
+    postalCode: string;
+    city: string;
+    level: string;
+    approved: string;
+    info?: string;
+    certificates: string;
+    professionalQualification: string;
+    children: string;
+    membershipDate: Date;
+}
+
+export interface AccompaniedChild {
+	id: string;
+	name: string;
+	qualification: string;
+	approvalUntil: Date;
+	fundingAgency: string;
+	contactPerson: string;
+	contactPhone: string;
+	contactEmail: string;
+	notes: string;
+}
+
 export interface ResponseGetCandidates {
 	candidates: Candidate[];
 	childCareRequests: ChildCareRequest[];
@@ -45,62 +76,30 @@ export interface ResponseGetChildcareMatches {
 	distance: number
 }
 
-
-
-function getRandomElement<T>(items: T[]): T {
-	return items[Math.floor(Math.random() * items.length)];
+export interface ResponseGetSchoolAssistants {
+	assistants: SchoolAssistant[];
 }
 
-export function randomizeCandidate(): Candidate {
-	return {
-		id: faker.string.uuid(),
-		name: faker.person.fullName(),
-		location: faker.location.city(),
-		qualification: getRandomElement(['Bachelor', 'Master', 'PhD', 'Diploma']),
-		hours: faker.datatype.boolean() ? getRandomElement(['Full-time', 'Part-time']) : null,
-		mobility: faker.datatype.boolean() ? faker.vehicle.type() : null,
-		receivedAt: faker.date.past(),
-		notes: faker.datatype.boolean() ? faker.lorem.sentence() : null,
-		startNote: faker.datatype.boolean() ? faker.lorem.sentence() : null,
-		sentDocuments: faker.datatype.boolean() ? 'Yes' : null,
-		completedChecklist: faker.datatype.boolean() ? 'Yes' : null,
-		vaccinationStat: faker.datatype.boolean()
-			? getRandomElement(['Vaccinated', 'Not Vaccinated'])
-			: null,
-		certificationState: faker.datatype.boolean()
-			? getRandomElement(['Certified', 'Not Certified'])
-			: null,
-		personalDocumentation: faker.datatype.boolean() ? 'Available' : null,
-		plannedChild: faker.datatype.boolean() ? 'Yes' : null
-	};
+export interface ResponseGetAssistantsAndAccompaniedChildren {
+	assistants: SchoolAssistant[];
+	children: AccompaniedChild[];
 }
 
-export function generateCandidates(count: number): Candidate[] {
-	const candidates: Candidate[] = [];
-	for (let i = 0; i < count; i++) {
-		candidates.push(randomizeCandidate());
-	}
-	return candidates;
+export interface ResponseGetSchoolAssistantMatches {
+	assistant: SchoolAssistant,
+	distance: number
 }
 
-export function randomizeChildCareRequest(): ChildCareRequest {
-	return {
-		id: faker.string.uuid(),
-		institution: faker.company.name(),
-		location: faker.location.city(),
-		grade: faker.number.int({ min: 0, max: 5 }).toString(),
-		hours: getRandomElement(['Full-time', 'Part-time']),
-		diagnosis: faker.datatype.boolean() ? faker.lorem.sentence() : null,
-		contact: faker.phone.number(),
-		receivedAt: faker.date.past(),
-		notes: faker.datatype.boolean() ? faker.lorem.sentence() : null
-	};
+export interface ResponseGetAccompaniedChildMatches {
+	assistant: SchoolAssistant,
+	distance: number
 }
 
-export function generateChildCareRequests(count: number): ChildCareRequest[] {
-	const requests: ChildCareRequest[] = [];
-	for (let i = 0; i < count; i++) {
-		requests.push(randomizeChildCareRequest());
-	}
-	return requests;
+export function getFullName(assistant: SchoolAssistant): string {
+	return `${assistant.firstName} ${assistant.lastName}`;
 }
+
+export function getFullAddress(assistant: SchoolAssistant): string {
+	return `${assistant.streetHouseNumber}, ${assistant.postalCode} ${assistant.city}`;
+}
+

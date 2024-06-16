@@ -7,9 +7,10 @@
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import { initializeStores, Drawer } from '@skeletonlabs/skeleton';
 	import LeftSideBar from '$lib/components/LeftSideBar.svelte';
-	import CandidateDrawer from '$lib/components/CandidateDrawer.svelte';
+	import CandidateDrawer from '$lib/components/drawers/CandidateDrawer.svelte';
 	import logo from "$lib/assets/georg_logo.png";
-	import ChildDrawer from '$lib/components/ChildDrawer.svelte';
+	import ChildDrawer from '$lib/components/drawers/ChildDrawer.svelte';
+	import SchoolAssistantDrawer from '$lib/components/drawers/SchoolAssistantDrawer.svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	initializeStores();
@@ -27,6 +28,10 @@
 		<CandidateDrawer />
 	{:else if $drawerStore.id === 'matchChildCareRequestsToCandidates'}
 		<ChildDrawer />
+	{:else if $drawerStore.id === 'matchSchoolAssistantsToSchoolAssistants'}
+		<SchoolAssistantDrawer />
+	{:else}
+		<!-- No Drawer Content -->
 	{/if}
 
 </Drawer>
