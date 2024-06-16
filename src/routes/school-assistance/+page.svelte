@@ -21,7 +21,7 @@
 			<!-- Tab Panels --->
 			<svelte:fragment slot="panel">
 				{#if tabSet === 0}
-					<DatatableSchoolAssistants schoolAssistants={res.assistants} />
+					<DatatableSchoolAssistants schoolAssistants={res} />
 				
 				<!-- not needed for now  --> 
 				<!--
