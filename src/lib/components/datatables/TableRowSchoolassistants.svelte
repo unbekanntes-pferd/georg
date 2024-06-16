@@ -2,18 +2,13 @@
 	import IconParkSolidConnection from '~icons/icon-park-solid/connection';
 	import { getDrawerStore, type DrawerSettings } from '@skeletonlabs/skeleton';
 	import {
-	generateSchoolAssistantMatches,
 		type ResponseGetSchoolAssistantMatches,
-
 		type SchoolAssistant
-
-
 	} from '$lib/models/models';
-	import { findSchoolAssistantMatches } from '$lib/data/data';
+	import { findSAssistantMatches } from '$lib/data/data';
 
 	const drawerStore = getDrawerStore();
 	export let schoolAssistant: SchoolAssistant;
-	export let schoolAssistants: SchoolAssistant[];
 
 	let isOpenMatches = false;
 	let matches: ResponseGetSchoolAssistantMatches[];
@@ -26,9 +21,7 @@
 
 	async function getMatches(id: string) {
 		isOpenMatches = !isOpenMatches;
-		// faking for now
-		// matches = await findSchoolAssistantMatches(id);
-		matches = generateSchoolAssistantMatches(schoolAssistants)
+		matches = await findSAssistantMatches(id);
 		drawerSettings.meta = {
 			matches
 		};

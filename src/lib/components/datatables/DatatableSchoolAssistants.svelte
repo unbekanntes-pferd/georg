@@ -47,7 +47,7 @@
 			</thead>
 
 			{#each $rows as row}
-				<TableRow schoolAssistant={row} schoolAssistants={schoolAssistants}/>
+				<TableRow schoolAssistant={row}/>
 			{/each}
 		</table>
 		<footer class="flex justify-end">

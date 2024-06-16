@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getFullName, type ResponseGetSchoolAssistantMatches } from '$lib/models/models';
 	import LocationIcon from '~icons/fluent/location-16-regular';
-	import Time from '~icons/fluent-mdl2/date-time';
 	import Approved from '~icons/material-symbols-light/order-approve-outline-sharp';
 	import Certificat from '~icons/ph/certificate-light';
 	import Qulification from '~icons/hugeicons/new-job';	
