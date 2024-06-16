@@ -84,12 +84,12 @@ export interface ResponseGetAssistantsAndAccompaniedChildren {
 }
 
 export interface ResponseGetSchoolAssistantMatches {
-	assistant: AccompaniedChild,
+	child: AccompaniedChild,
 	distance: number
 }
 
 export interface ResponseGetAccompaniedChildMatches {
-	child: SchoolAssistant,
+	assistant: SchoolAssistant,
 	distance: number
 }
 
