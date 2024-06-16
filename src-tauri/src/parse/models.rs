@@ -34,6 +34,107 @@ pub struct Candidate {
     pub planned_child: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Assistant {
+    #[serde(rename(serialize = "lastName", deserialize = "Name"))]
+    pub last_name: String,
+    #[serde(rename(serialize = "firstName", deserialize = "Vorname"))]
+    pub first_name: String,
+    #[serde(rename(serialize = "birthDate", deserialize = "Geb.datum"))]
+    pub birth_date: String,
+    #[serde(rename(serialize = "assignedChild", deserialize = "Begl.Kind"))]
+    pub assigned_child: String,
+    #[serde(rename(serialize = "telNumber", deserialize = "Telefon"))]
+    pub tel_number: Option<String>,
+    #[serde(rename(serialize = "mobileNumber", deserialize = "Mobil"))]
+    pub mobile_number: Option<String>,
+    #[serde(rename(serialize = "email", deserialize = "Email"))]
+    pub email: Option<String>,
+    #[serde(rename(serialize = "address", deserialize = "Straße/Hausnummer"))]
+    pub address: String,
+    #[serde(rename(serialize = "zipCode", deserialize = "PLZ"))]
+    pub zip_code: String,
+    #[serde(rename(serialize = "city", deserialize = "Wohnort"))]
+    pub city: String,
+    #[serde(rename(serialize = "level", deserialize = "Eingr."))]
+    pub level: String,
+    #[serde(rename(serialize = "approved", deserialize = "genehmigt"))]
+    pub approved: String,
+    #[serde(rename(serialize = "info", deserialize = "Info"))]
+    pub info: Option<String>,
+    #[serde(rename(serialize = "certifications", deserialize = "Abschlusszeugnisse"))]
+    pub certifications: String,
+    #[serde(rename(
+        serialize = "title",
+        deserialize = "Berufsbezeichnung/Ausbildung/Abschluss"
+    ))]
+    pub title: Option<String>,
+    #[serde(rename(serialize = "children", deserialize = "Kinder"))]
+    pub children: Option<String>,
+    #[serde(rename(serialize = "assitantSince", deserialize = "Zugehörigkeit"))]
+    pub assitant_since: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AssistantResponse {
+    pub id: String,
+    pub last_name: String,
+    pub first_name: String,
+    pub birth_date: String,
+    pub assigned_child: String,
+    pub tel_number: Option<String>,
+    pub mobile_number: Option<String>,
+    pub email: Option<String>,
+    pub address: String,
+    pub zip_code: String,
+    pub city: String,
+    pub level: String,
+    pub approved: String,
+    pub info: Option<String>,
+    pub certifications: String,
+    pub title: Option<String>,
+    pub children: Option<String>,
+    pub assitant_since: Option<String>,
+}
+
+impl AssistantResponse {
+    pub fn get_address(&self) -> String {
+        format!("{} {} {}", self.address, self.zip_code, self.city)
+    }
+}
+
+impl From<Assistant> for AssistantResponse {
+    fn from(assistant: Assistant) -> Self {
+        let unique_factors = format!(
+            "{}:{}:{}",
+            assistant.last_name, assistant.first_name, assistant.zip_code
+        );
+
+        let id = generate_unique_id(&unique_factors);
+
+        Self {
+            id,
+            last_name: assistant.last_name,
+            first_name: assistant.first_name,
+            birth_date: assistant.birth_date,
+            assigned_child: assistant.assigned_child,
+            tel_number: assistant.tel_number,
+            mobile_number: assistant.mobile_number,
+            email: assistant.email,
+            address: assistant.address,
+            zip_code: assistant.zip_code,
+            city: assistant.city,
+            level: assistant.level,
+            approved: assistant.approved,
+            info: assistant.info,
+            certifications: assistant.certifications,
+            title: assistant.title,
+            children: assistant.children,
+            assitant_since: assistant.assitant_since,
+        }
+    }
+}
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -59,11 +160,7 @@ impl From<Candidate> for CandidateResponse {
     fn from(cand: Candidate) -> Self {
         let unique_factors = format!("{}:{}", cand.name, cand.location);
 
-        let id = Sha256::digest(unique_factors.as_bytes())
-            .to_vec()
-            .iter()
-            .map(|b| format!("{:02x}", b))
-            .collect::<String>();
+        let id = generate_unique_id(&unique_factors);
 
         Self {
             id,
@@ -128,7 +225,6 @@ pub struct ChildCareRequest {
     pub notes: Option<String>,
 }
 
-
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ChildCareRequestResponse {
@@ -156,19 +252,15 @@ impl ChildCareRequestResponse {
             contact: "Frau Mock".to_string(),
             received_at: None,
             notes: None,
+        }
     }
-}
 }
 
 impl From<ChildCareRequest> for ChildCareRequestResponse {
     fn from(req: ChildCareRequest) -> Self {
         let unique_factors = format!("{}:{}", req.institution, req.location);
 
-        let id = Sha256::digest(unique_factors.as_bytes())
-            .to_vec()
-            .iter()
-            .map(|b| format!("{:02x}", b))
-            .collect::<String>();
+        let id = generate_unique_id(&unique_factors);
 
         Self {
             id,
@@ -192,7 +284,10 @@ pub struct CandidateRequests {
 }
 
 impl CandidateRequests {
-    pub fn new(candidates: Vec<CandidateResponse>, child_care_requests: Vec<ChildCareRequestResponse>) -> Self {
+    pub fn new(
+        candidates: Vec<CandidateResponse>,
+        child_care_requests: Vec<ChildCareRequestResponse>,
+    ) -> Self {
         Self {
             candidates,
             child_care_requests,
@@ -223,10 +318,28 @@ impl CandidateRequests {
 
 pub struct ImportFiles {
     pub candidates_file: PathBuf,
+    pub assistants_file: PathBuf,
+    pub assistance_overview_file: PathBuf,
 }
 
 impl ImportFiles {
-    pub fn new(candidates_file: PathBuf) -> Self {
-        Self { candidates_file }
+    pub fn new(
+        candidates_file: PathBuf,
+        assistants_file: PathBuf,
+        assistance_overview_file: PathBuf,
+    ) -> Self {
+        Self {
+            candidates_file,
+            assistants_file,
+            assistance_overview_file,
+        }
     }
+}
+
+pub fn generate_unique_id(unique_factors: &str) -> String {
+    let hash = Sha256::digest(unique_factors.as_bytes());
+    hash.iter().fold(String::new(), |mut acc, byte| {
+        acc.push_str(&format!("{:02x}", byte));
+        acc
+    })
 }
