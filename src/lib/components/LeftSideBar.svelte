@@ -25,8 +25,8 @@
 
 </script>
 
-<div class="w-48 bg-surface-800 h-full">
+<div class="flex flex-col w-48 bg-surface-800 h-full">
 	<button disabled={disabledCandidates} on:click={() => goto('candidates')} class="btn">Bewerber</button>
 	<button disabled={disabledSchoolAssistants} on:click={() => goto('school-assistance')} class="btn">Schulbegleitung</button>
-	<button on:click={() => goto('settings')} class="btn">Einstellungen</button>
+	<button on:click={() => goto('settings')} class="btn mt-auto">Einstellungen</button>
 </div>
