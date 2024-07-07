@@ -22,7 +22,7 @@
 		<header class="flex justify-between gap-4">
 			<Search {handler} />
 		</header>
-		<table class="table table-hover table-compact table-auto w-full text-xs">
+		<table class="table table-hover table-compact table-auto w-full text-base">
 			<thead>
 				<tr>
 					<td>Match</td>
