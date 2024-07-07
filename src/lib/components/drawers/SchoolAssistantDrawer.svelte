@@ -19,35 +19,43 @@
 		{#each schoolAssistantMatches as schoolAssistantMatch}
 			<div class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 assistantCard">
 				<div class="flex flex-row">
-					<Profile class="mr-2" />
-					<p class="font-">{getFullName(schoolAssistantMatch.assistant)}</p>
+					<span class="font-bold">Name </span>
+					<Profile class="mx-2" />
+					<p>{getFullName(schoolAssistantMatch.assistant)}</p>
 				</div>
 				<div class="flex flex-row">
-					<LocationIcon class="mr-2" />
+					<span class="font-bold">Wohnort </span>
+					<LocationIcon class="mx-2" />
 					<p>{schoolAssistantMatch.assistant.city ? schoolAssistantMatch.assistant.city : '-'} (Distanz: {schoolAssistantMatch ? schoolAssistantMatch.distance.toFixed(0) : '-'} km)</p>
 				</div>
 				<div class="flex flex-row">
-					<Child class="mr-2" />
-					<p>{schoolAssistantMatch.assistant.accompanyingChild ? schoolAssistantMatch.assistant.accompanyingChild : '-'}</p>
+					<span class="font-bold">Begleitetes Kind </span>
+					<Child class="mx-2" />
+					<p>{schoolAssistantMatch.assistant.assignedChild ? schoolAssistantMatch.assistant.assignedChild : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Skills class="mr-2" />
+					<span class="font-bold">Eingr. </span>
+					<Skills class="mx-2" />
 					<p>{schoolAssistantMatch.assistant.level ? schoolAssistantMatch.assistant.level : '-'}</p>
 				</div>
                 <div class="flex flex-row">
-					<Approved class="mr-2" />
+					<span class="font-bold">genehmigt </span>
+					<Approved class="mx-2" />
 					<p>{schoolAssistantMatch.assistant.approved ? schoolAssistantMatch.assistant.approved : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Certificat class="mr-2" />
-					<p>{schoolAssistantMatch.assistant.certificates ? schoolAssistantMatch.assistant.certificates : '-'}</p>
+					<span class="font-bold">Info </span>
+					<Certificat class="mx-2" />
+					<p>{schoolAssistantMatch.assistant.info ? schoolAssistantMatch.assistant.info : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Qulification class="mr-2" />
-					<p>{schoolAssistantMatch.assistant.professionalQualification ? schoolAssistantMatch.assistant.professionalQualification : '-'}</p>
+					<span class="font-bold">Abschlusszeugnisse </span>
+					<Qulification class="mx-2" />
+					<p>{schoolAssistantMatch.assistant.certifications ? schoolAssistantMatch.assistant.certifications : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Family class="mr-2" />
+					<span class="font-bold">Kinder </span>
+					<Family class="mx-2" />
 					<p>{schoolAssistantMatch.assistant.children ? schoolAssistantMatch.assistant.children : '-'}</p>
 				</div>
 			</div>

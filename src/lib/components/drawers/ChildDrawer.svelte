@@ -19,35 +19,43 @@
 		{#each childCareRequests as childCareRequest}
 			<div class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard">
 				<div class="flex flex-row">
-					<Profile class="mr-2" />
+					<span class="font-bold">Name </span>
+					<Profile class="mx-2" />
 					<p class="font-">{childCareRequest.candidate.name ? childCareRequest.candidate.name : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<LocationIcon class="mr-2" />
+					<span class="font-bold">Wohnort </span>
+					<LocationIcon class="mx-2" />
 					<p>{childCareRequest.candidate.location ? childCareRequest.candidate.location : '-'} (Distanz: {childCareRequest ? childCareRequest.distance.toFixed(0) : '-'} km)</p>
 				</div>
 				<div class="flex flex-row">
-					<Qulification class="mr-2" />
+					<span class="font-bold">Qualifikation </span>
+					<Qulification class="mx-2" />
 					<p>{childCareRequest.candidate.qualification ? childCareRequest.candidate.qualification : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Time class="mr-2" />
+					<span class="font-bold">Stundenumfang </span>
+					<Time class="mx-2" />
 					<p>{childCareRequest.candidate.hours ? childCareRequest.candidate.hours : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Transport class="mr-2" />
+					<span class="font-bold">Mobilität </span>
+					<Transport class="mx-2" />
 					<p>{childCareRequest.candidate.mobility ? childCareRequest.candidate.mobility : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Family class="mr-2" />
+					<span class="font-bold">Geplantes Kind </span>
+					<Family class="mx-2" />
 					<p>{childCareRequest.candidate.plannedChild ? childCareRequest.candidate.plannedChild : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<TimeEntry class="mr-2" />
+					<span class="font-bold">Eingang </span>
+					<TimeEntry class="mx-2" />
 					<p>{childCareRequest.candidate.receivedAt ? childCareRequest.candidate.receivedAt : '-'}</p>
 				</div>
 				<div class="flex flex-row">
-					<Notes class="mr-2" />
+					<span class="font-bold">Notizen </span>
+					<Notes class="mx-2" />
 					<p>{childCareRequest.candidate.notes ? childCareRequest.candidate.notes : '-'}</p>
 				</div>
 			</div>
