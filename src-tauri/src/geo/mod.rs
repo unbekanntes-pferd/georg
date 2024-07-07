@@ -200,9 +200,7 @@ mod tests {
     use std::sync::Arc;
 
     use crate::{
-        geo::{build_candidate_matches, build_childcare_req_matches, calculate_distances},
-        models::{GeoCode, GeorgState},
-        parse::CandidateRequests,
+        db::MockGeoCodeRepository, geo::{build_candidate_matches, build_childcare_req_matches, calculate_distances}, models::{GeoCode, GeorgState}, parse::CandidateRequests
     };
 
     #[test]
@@ -245,12 +243,13 @@ mod tests {
         assert_eq!(matches[2].1, 156.278491353312);
     }
 
-    #[test]
-    fn test_build_childcare_req_matches() {
-        let state = Arc::new(GeorgState::new());
+    #[tokio::test]
+    async fn test_build_childcare_req_matches() {
+        let mock_repository = Arc::new(MockGeoCodeRepository::new());
+        let state = Arc::new(GeorgState::new(mock_repository));
         let candidate_requests = CandidateRequests::new_mock();
         state.update_candidate_reqs(candidate_requests);
-        state.set_geo_codes().unwrap();
+        state.set_geo_codes().await.unwrap();
 
         let matches = vec![
             (String::from("1"), 0.0),
@@ -278,12 +277,13 @@ mod tests {
         assert_eq!(match_3.candidate.location, "Kareth");
     }
 
-    #[test]
-    fn test_build_candidate_matches() {
-        let state = Arc::new(GeorgState::new());
+    #[tokio::test]
+    async fn test_build_candidate_matches() {
+        let mock_repository = Arc::new(MockGeoCodeRepository::new());
+        let state = Arc::new(GeorgState::new(mock_repository));
         let candidate_requests = CandidateRequests::new_mock();
         state.update_candidate_reqs(candidate_requests);
-        state.set_geo_codes().unwrap();
+        state.set_geo_codes().await.unwrap();
 
         let matches = vec![
             (String::from("1"), 0.0),

@@ -6,7 +6,10 @@ use std::{
 use haversine::Location;
 use photon_geocoding::{filter::ForwardFilter, PhotonApiClient};
 
-use crate::parse::{AssistantResponse, CandidateRequests};
+use crate::{
+    db::GeoCodeRepository,
+    parse::{AssistantResponse, CandidateRequests},
+};
 
 #[derive(thiserror::Error, Debug)]
 pub enum GeorgError {
@@ -53,18 +56,19 @@ impl From<GeoCode> for Location {
 
 pub struct GeorgState {
     photon_api_client: PhotonApiClient,
-    pub candidate_requests: Mutex<CandidateRequests>,
-    pub assistant_data: Mutex<Vec<AssistantResponse>>,
-    pub candidates_geo_codes: Mutex<HashMap<String, GeoCode>>,
-    pub req_geo_codes: Mutex<HashMap<String, GeoCode>>,
-    pub assistant_geo_codes: Mutex<HashMap<String, GeoCode>>,
+    pub candidate_requests: Arc<Mutex<CandidateRequests>>,
+    pub assistant_data: Arc<Mutex<Vec<AssistantResponse>>>,
+    pub candidates_geo_codes: Arc<Mutex<HashMap<String, GeoCode>>>,
+    pub req_geo_codes: Arc<Mutex<HashMap<String, GeoCode>>>,
+    pub assistant_geo_codes: Arc<Mutex<HashMap<String, GeoCode>>>,
+    geo_repository: Arc<dyn GeoCodeRepository>,
 }
 
 pub struct AppState(Arc<GeorgState>);
 
 impl AppState {
-    pub fn new() -> Self {
-        Self(Arc::new(GeorgState::new()))
+    pub fn new(geo_repository: Arc<dyn GeoCodeRepository>) -> Self {
+        Self(Arc::new(GeorgState::new(geo_repository)))
     }
 
     pub fn inner(&self) -> Arc<GeorgState> {
@@ -72,17 +76,25 @@ impl AppState {
     }
 }
 
+pub enum GeoCodeType {
+    Candidate,
+    Request,
+    Assistant,
+}
+
 impl GeorgState {
-    pub fn new() -> Self {
+    pub fn new(geo_repository: Arc<dyn GeoCodeRepository>) -> Self {
         let candidate_requests = CandidateRequests::new(vec![], vec![]);
         let client = PhotonApiClient::default();
+
         Self {
             photon_api_client: client,
-            candidate_requests: Mutex::new(candidate_requests),
-            assistant_data: Mutex::new(Vec::new()),
-            candidates_geo_codes: Mutex::new(HashMap::new()),
-            req_geo_codes: Mutex::new(HashMap::new()),
-            assistant_geo_codes: Mutex::new(HashMap::new()),
+            candidate_requests: Arc::new(Mutex::new(candidate_requests)),
+            assistant_data: Arc::new(Mutex::new(Vec::new())),
+            candidates_geo_codes: Arc::new(Mutex::new(HashMap::new())),
+            req_geo_codes: Arc::new(Mutex::new(HashMap::new())),
+            assistant_geo_codes: Arc::new(Mutex::new(HashMap::new())),
+            geo_repository,
         }
     }
 
@@ -94,31 +106,91 @@ impl GeorgState {
         *self.assistant_data.lock().expect("poisoned mutex") = assistants_data;
     }
 
-    pub fn set_geo_codes(&self) -> Result<(), GeorgError> {
-        let mut geo_codes = self.candidates_geo_codes.lock().expect("poisoned mutex");
-        let candidate_reqs = self.candidate_requests.lock().expect("poisoned mutex");
-        let assistant_data = self.assistant_data.lock().expect("poisoned mutex");
-
-        for candidate in candidate_reqs.candidates.iter() {
-            let geo_code = self.get_geo_code(&candidate.location)?;
-            geo_codes.insert(candidate.id.clone(), geo_code);
+    /// set geocodes for all candidates, requests and assistants
+    pub async fn set_geo_codes(&self) -> Result<(), GeorgError> {
+        // process candidates and quickly release lock
+        {
+            let candidate_ids_and_locations: Vec<(String, String)> = {
+                let candidate_reqs = self.candidate_requests.lock().expect("poisoned mutex");
+                candidate_reqs
+                    .candidates
+                    .iter()
+                    .map(|c| (c.id.clone(), c.location.clone()))
+                    .collect()
+            };
+            for (id, location) in candidate_ids_and_locations {
+                self.process_geo_code(&id, &location, GeoCodeType::Candidate)
+                    .await?
+            }
         }
 
-        let mut req_geo_codes = self.req_geo_codes.lock().expect("poisoned mutex");
+        // process requests and quickly release lock
+        {
+            let request_ids_and_locations: Vec<(String, String)> = {
+                let candidate_reqs = self.candidate_requests.lock().expect("poisoned mutex");
+                candidate_reqs
+                    .child_care_requests
+                    .iter()
+                    .map(|r| (r.id.clone(), r.location.clone()))
+                    .collect()
+            };
 
-        for req in candidate_reqs.child_care_requests.iter() {
-            let geo_code = self.get_geo_code(&req.location)?;
-            req_geo_codes.insert(req.id.clone(), geo_code);
+            for (id, location) in request_ids_and_locations {
+                self.process_geo_code(&id, &location, GeoCodeType::Request)
+                    .await?
+            }
         }
 
-        let mut assistant_geo_codes = self.assistant_geo_codes.lock().expect("poisoned mutex");
-
-        for assistant in assistant_data.iter() {
-            let geo_code = self.get_geo_code(&assistant.get_address())?;
-            assistant_geo_codes.insert(assistant.id.clone(), geo_code);
+        // process assistants and quickly release lock
+        {
+            let assistant_ids_and_addresses: Vec<(String, String)> = {
+                let assistant_data = self.assistant_data.lock().expect("poisoned mutex");
+                assistant_data
+                    .iter()
+                    .map(|a| (a.id.clone(), a.get_address()))
+                    .collect()
+            };
+            for (id, location) in assistant_ids_and_addresses {
+                self.process_geo_code(&id, &location, GeoCodeType::Assistant)
+                    .await?
+            }
         }
 
         Ok(())
+    }
+
+    /// insert geocode into memory hashmap 
+    /// either fetch from DB or photon API
+    pub async fn process_geo_code(
+        &self,
+        id: &str,
+        location: &str,
+        geo_code_type: GeoCodeType,
+    ) -> Result<(), GeorgError> {
+        // check if geocode in DB
+        if let Some(geo_code) = self.geo_repository.get_geo_location(id).await? {
+            self.insert_geo_code(id, geo_code, geo_code_type).await;
+            return Ok(());
+        } else {
+            // otherwise fetch from photon and insert into DB
+            let geo_code = self.get_geo_code(location)?;
+            self.geo_repository
+                .insert_geo_location(id, &geo_code)
+                .await?;
+            self.insert_geo_code(id, geo_code, geo_code_type).await;
+            return Ok(());
+        }
+    }
+
+    /// insert geocode into memory hashmap
+    pub async fn insert_geo_code(&self, id: &str, geo_code: GeoCode, geo_code_type: GeoCodeType) {
+        let mut geo_codes = match geo_code_type {
+            GeoCodeType::Candidate => self.candidates_geo_codes.lock().expect("poisoned mutex"),
+            GeoCodeType::Request => self.req_geo_codes.lock().expect("poisoned mutex"),
+            GeoCodeType::Assistant => self.assistant_geo_codes.lock().expect("poisoned mutex"),
+        };
+
+        geo_codes.insert(id.to_string(), geo_code);
     }
 
     fn get_geo_code(&self, search: &str) -> Result<GeoCode, GeorgError> {
@@ -146,16 +218,20 @@ impl GeorgState {
 
 #[cfg(test)]
 mod tests {
-    use crate::parse::CandidateRequests;
+    use std::sync::Arc;
+
+    use crate::{db::MockGeoCodeRepository, parse::CandidateRequests};
 
     use super::GeorgState;
 
-    #[test]
-    fn test_set_candidates_geo_codes() {
-        let state = GeorgState::new();
+    #[tokio::test]
+    async fn test_set_candidates_geo_codes() {
+        let mock_repository = Arc::new(MockGeoCodeRepository::new());
+
+        let state = GeorgState::new(mock_repository);
         let candidate_requests = CandidateRequests::new_mock();
         state.update_candidate_reqs(candidate_requests);
-        state.set_geo_codes().unwrap();
+        state.set_geo_codes().await.unwrap();
 
         let candidates_geo_codes = state.candidates_geo_codes.lock().expect("poisoned mutex");
 
