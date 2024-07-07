@@ -99,10 +99,12 @@ pub fn find_assistant_matches(
         .lock()
         .expect("poisoned mutex")
         .iter()
-        .filter_map(|(option_id, geo_code)| if id == *option_id {
-            None
-        } else {
-            Some((option_id.clone(), geo_code.clone()))
+        .filter_map(|(option_id, geo_code)| {
+            if id == *option_id {
+                None
+            } else {
+                Some((option_id.clone(), geo_code.clone()))
+            }
         })
         .collect();
 
@@ -130,12 +132,7 @@ pub fn find_assistant_matches(
     Ok(matches)
 }
 
-
-
-fn calculate_distances(
-    target: GeoCode,
-    options: Vec<(String, GeoCode)>,
-) -> Vec<(String, f64)> {
+fn calculate_distances(target: GeoCode, options: Vec<(String, GeoCode)>) -> Vec<(String, f64)> {
     options
         .iter()
         .map(|(id, geo_code)| {
@@ -200,7 +197,10 @@ mod tests {
     use std::sync::Arc;
 
     use crate::{
-        db::MockGeoCodeRepository, geo::{build_candidate_matches, build_childcare_req_matches, calculate_distances}, models::{GeoCode, GeorgState}, parse::CandidateRequests
+        db::MockGeoCodeRepository,
+        geo::{build_candidate_matches, build_childcare_req_matches, calculate_distances},
+        models::{GeoCode, GeorgState},
+        parse::CandidateRequests,
     };
 
     #[test]
@@ -309,5 +309,27 @@ mod tests {
         assert_eq!(match_3.distance, 5.0);
         assert_eq!(match_3.candidate.id, "3");
         assert_eq!(match_3.candidate.location, "Kareth");
+    }
+
+    #[tokio::test]
+    async fn test_get_stored_geo_codes() {
+        let mock_repository = Arc::new(MockGeoCodeRepository::new());
+        let state = Arc::new(GeorgState::new(mock_repository));
+
+        let candidate_requests = CandidateRequests::new_mock();
+        state.update_candidate_reqs(candidate_requests);
+        state.set_geo_codes().await.unwrap();
+
+        let geo_codes = state.candidates_geo_codes.lock().expect("poisoned mutex");
+
+        assert_eq!(geo_codes.len(), 4);
+        assert_eq!(geo_codes.get("1").unwrap().lat, 1.0);
+        assert_eq!(geo_codes.get("1").unwrap().lon, 1.0);
+        assert_eq!(geo_codes.get("2").unwrap().lat, 2.0);
+        assert_eq!(geo_codes.get("2").unwrap().lon, 2.0);
+        assert_eq!(geo_codes.get("3").unwrap().lat, 3.0);
+        assert_eq!(geo_codes.get("3").unwrap().lon, 3.0);
+        assert_eq!(geo_codes.get("4").unwrap().lat, 4.0);
+        assert_eq!(geo_codes.get("4").unwrap().lon, 4.0);
     }
 }
