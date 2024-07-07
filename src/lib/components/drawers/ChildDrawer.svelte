@@ -56,9 +56,6 @@
 </div>
 
 <style>
-	.childCard p {
-		@apply text-surface-400;
-	}
 	.childCard div {
 		@apply items-center;
 	}

@@ -56,9 +56,6 @@
 </div>
 
 <style>
-	.assistantCard p {
-		@apply text-surface-400;
-	}
 	.assistantCard div {
 		@apply items-center;
 	}
