@@ -58,7 +58,7 @@ impl GeoCodeRepository for SqliteGeoCodeRepository {
     async fn insert_geo_location(&self, id: &str, geo_code: &GeoCode) -> Result<(), GeorgError> {
         sqlx::query(
             r#"
-            INSERT INTO geo_codes (id, lat, lon)
+            INSERT INTO geo_locations (id, lat, lon)
             VALUES (?, ?, ?)
             "#,
         )
@@ -67,7 +67,8 @@ impl GeoCodeRepository for SqliteGeoCodeRepository {
         .bind(geo_code.lon)
         .execute(&self.pool)
         .await
-        .map_err(|_| GeorgError::Unknown)?;
+        .map_err(|_err| {
+            GeorgError::Unknown})?;
 
         Ok(())
     }
@@ -76,14 +77,16 @@ impl GeoCodeRepository for SqliteGeoCodeRepository {
         let result: Option<(f64, f64)> = sqlx::query_as(
             r#"
             SELECT lat, lon
-            FROM geo_codes
+            FROM geo_locations
             WHERE id = ?
             "#,
         )
         .bind(id)
         .fetch_optional(&self.pool)
         .await
-        .map_err(|_| GeorgError::Unknown)?;
+        .map_err(|_err| {
+        
+            GeorgError::Unknown})?;
 
         Ok(result.map(|(lat, lon)| GeoCode::new(lat, lon)))
     }
@@ -96,7 +99,14 @@ impl GeoCodeRepository for MockGeoCodeRepository {
         Ok(())
     }
 
-    async fn get_geo_location(&self, _id: &str) -> Result<Option<GeoCode>, GeorgError> {
-        Ok(None)
+    async fn get_geo_location(&self, id: &str) -> Result<Option<GeoCode>, GeorgError> {
+
+        match id {
+            "1" => Ok(Some(GeoCode::new(1.0, 1.0))),
+            "2" => Ok(Some(GeoCode::new(2.0, 2.0))),
+            "3" => Ok(Some(GeoCode::new(3.0, 3.0))),
+            "4" => Ok(Some(GeoCode::new(4.0, 4.0))),
+            _ => Ok(None),
+        }
     }
 }

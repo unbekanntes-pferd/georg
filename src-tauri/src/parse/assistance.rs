@@ -19,7 +19,7 @@ pub (crate) fn parse_assistant_data(import_files: &ImportFiles) -> Result<Vec<As
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     let assistants = parse_assistants(&mut workbook)?;
-    eprintln!("Assistants: {:?}", assistants);
+
     let assistants = assistants.into_iter().map(|c| c.into()).collect();
 
     Ok(assistants)
@@ -28,8 +28,6 @@ pub (crate) fn parse_assistant_data(import_files: &ImportFiles) -> Result<Vec<As
 fn parse_assistants(work_book: &mut Xlsx<BufReader<File>>) -> Result<Vec<Assistant>, GeorgError> {
     let mut assistants = Vec::new();
     let sheet = work_book.worksheet_range(ASSISTANTS_SHEET_NAME)?;
-
-    eprintln!("Sheet: {:?}",  sheet);
 
     let de = RangeDeserializerBuilder::new()
         .from_range(&sheet)
