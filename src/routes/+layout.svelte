@@ -1,16 +1,17 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { AppShell, AppBar, type DrawerSettings, getDrawerStore } from '@skeletonlabs/skeleton';
+	import { AppShell, AppBar, type DrawerSettings, getDrawerStore, autoModeWatcher } from '@skeletonlabs/skeleton';
 	import FeBar from '~icons/fe/bar';
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup, Toast  } from '@skeletonlabs/skeleton';
-	import { initializeStores, Drawer } from '@skeletonlabs/skeleton';
+	import { initializeStores, Drawer, LightSwitch } from '@skeletonlabs/skeleton';
 	import LeftSideBar from '$lib/components/LeftSideBar.svelte';
 	import CandidateDrawer from '$lib/components/drawers/CandidateDrawer.svelte';
 	import logo from "$lib/assets/georg_logo.png";
 	import ChildDrawer from '$lib/components/drawers/ChildDrawer.svelte';
 	import SchoolAssistantDrawer from '$lib/components/drawers/SchoolAssistantDrawer.svelte';
+	import { onMount } from 'svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	initializeStores();
@@ -22,6 +23,9 @@
 	}
 	const drawerStore = getDrawerStore();
 
+	onMount(() => {										
+		autoModeWatcher();
+	})
 	
 
 </script>
@@ -52,10 +56,10 @@
 				</button>
 			</svelte:fragment>
 
-			<svelte:fragment slot="trail"
-				>
-				<img src={logo} alt="georg-logo" class="w-8"></svelte:fragment
-			>
+			<svelte:fragment slot="trail">
+				<LightSwitch />
+				<img src={logo} alt="georg-logo" class="w-8">
+			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
