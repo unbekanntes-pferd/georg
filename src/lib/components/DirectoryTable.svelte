@@ -13,7 +13,7 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>Datei</th>
+				<th>Exceldatei für:</th>
 				<th>Pfad</th>
 				<th>Status</th>
 			</tr>
@@ -27,3 +27,9 @@
 		</tbody>
 	</table>
 </div>
+
+<style>
+	.table thead tr {
+		text-transform: none
+	}
+</style>

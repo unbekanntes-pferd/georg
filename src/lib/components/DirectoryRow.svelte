@@ -1,9 +1,7 @@
 <script lang="ts">
     import { open } from '@tauri-apps/api/dialog';
-	import { invoke } from '@tauri-apps/api/tauri';
 	import ClarityDirectorySolid from '~icons/clarity/directory-solid';
 	import MaterialSymbolsDirectorySyncRounded from '~icons/material-symbols/directory-sync-rounded';
-	import { onMount } from 'svelte';
 	import { State, setPath, setPathState, type ExcelPathCommand } from '$lib/stores/path';
 	import { invokePathCommand } from '$lib/data/data';
     
@@ -25,27 +23,24 @@
                 await invokePathCommand(directory.command, selectedDirectory as string)
                 
                 if (!Array.isArray(selectedDirectory)) {
-                    setPath(row.fileName, selectedDirectory)
-                    setPathState(row.fileName, State.Ok)
+                    setPath(row.purpose, selectedDirectory)
+                    setPathState(row.purpose, State.Ok)
                 }
             } catch (error) {
-                setPathState(row.fileName, State.Error)
+                setPathState(row.purpose, State.Error)
                 console.error(error);
             } finally {
                 loading = false;
             }
         }
 	}
-    // check on mounting if path was saved in backend
-    onMount(() => {
-        console.log(row);
-    });
+    
 </script>
 
 
 <tr>
     {#key loading}
-    <td>{row.fileName}</td>
+    <td>{row.purpose}</td>
     {#if row.path && !loading}
         <td class="flex flew-row"
             >{row.path}

@@ -3,7 +3,7 @@ import { get } from 'svelte/store';
 
 export interface ExcelPathCommandStore {
   directories: {
-      fileName: string;
+      purpose: string;
       path: string;
       command: Command;
       state: State;
@@ -11,7 +11,7 @@ export interface ExcelPathCommandStore {
 }
 
 export interface ExcelPathCommand {
-	fileName: string;
+	purpose: string;
 	path: string | null;
 	command: Command;
 	state: State;
@@ -29,14 +29,14 @@ export enum State {
 }
 
 const candidates = {
-  fileName: 'Bewerbungen und Anfragen_Begleitungen.xlsx',
+  purpose: 'Bewerbungen und Anfragen',
   path: '',
   command: Command.CandidatesAndChildCareRequests,
   state: State.Tbd
 };
 
 const schoolAssistants = {
-  fileName: 'Daten_der_SchulbegleiterInnen_Test',
+  purpose: 'Daten der Schulbegleiter*innen und Übersicht der Schulbegleitungen',
   path: '',
   command: Command.SchoolAssistants,
   state: State.Tbd
@@ -47,9 +47,9 @@ export const excelPathCommandStore = persisted('excelPathCommands', {
 })
 
 
-export function setPath(fileName: string, path: string) {
+export function setPath(purpose: string, path: string) {
   excelPathCommandStore.update(store => {
-    const directory = store.directories.find(directory => directory.fileName === fileName);
+    const directory = store.directories.find(directory => directory.purpose === purpose);
     if (directory) {
       directory.path = path;
     }
@@ -57,9 +57,9 @@ export function setPath(fileName: string, path: string) {
   })
 }
 
-export function setPathState(fileName: string, state: State) {
+export function setPathState(purpose: string, state: State) {
   excelPathCommandStore.update(store => {
-    const directory = store.directories.find(directory => directory.fileName === fileName);
+    const directory = store.directories.find(directory => directory.purpose === purpose);
     if (directory) {
       directory.state = state;
     }
