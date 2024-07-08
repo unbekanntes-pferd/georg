@@ -57,10 +57,10 @@
 		"windows": [
 			{
 				"fullscreen": false,
-				"height": 600,
+				"height": 1080,
 				"resizable": true,
-				"title": "georg",
-				"width": 800
+				"title": "GEOrg",
+				"width": 1920
 			}
 		]
 	}
