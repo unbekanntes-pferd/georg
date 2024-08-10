@@ -7,11 +7,11 @@
 	let tabSet: number = 0;
 </script>
 
-<div class="p-4">
+<div class="p-4 h-full">
 	{#await getAssistantData()}
 		<p>Loading...</p>
 	{:then res}
-		<TabGroup>
+	<TabGroup class="h-full" regionPanel="h-full">
 			<Tab bind:group={tabSet} name="tab1" value={0}>
 				<span>Schulbegleiter*innen</span>
 			</Tab>
