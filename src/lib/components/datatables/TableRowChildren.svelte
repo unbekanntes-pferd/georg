@@ -11,10 +11,12 @@
 
 	} from '$lib/models/models';
 	import { findChildcareReqMatches } from '$lib/data/data';
+	import type { ColumnKeyChildCare } from '$lib/stores/columnsChildcare';
 
 	const drawerStore = getDrawerStore();
 	export let childCareRequest: ChildCareRequest;
-
+	export let visibleColumns: ColumnKeyChildCare[];
+	
 	let isOpenMatches = false;
 	let matches: ResponseGetChildcareMatches[];
 
@@ -37,14 +39,14 @@
 
 <tbody>
 	<tr>
-		<td on:click={() => getMatches(childCareRequest.id)}><IconParkSolidConnection /></td>
-		<td>{childCareRequest.institution ? childCareRequest.institution : '-'}</td>
-						<td>{childCareRequest.location ? childCareRequest.location : '-'}</td>
-						<td>{childCareRequest.grade ? childCareRequest.grade : '-'}</td>
-						<td>{childCareRequest.hours ? childCareRequest.hours : '-'}</td>
-						<td>{childCareRequest.diagnosis ? childCareRequest.diagnosis : '-'}</td>
-						<td>{childCareRequest.contact ? childCareRequest.contact : '-'}</td>
-						<td>{childCareRequest.receivedAt ? childCareRequest.receivedAt : '-'}</td>
-						<td>{childCareRequest.notes ? childCareRequest.notes : '-'}</td>
+		{#each visibleColumns as column}
+			<td>
+				{#if column === 'id'}
+					<button on:click={() => getMatches(childCareRequest.id)}><IconParkSolidConnection /></button>
+				{:else}
+					{childCareRequest[column] === null ? "-" : childCareRequest[column]}
+				{/if}
+			</td>
+		{/each}
 	</tr>
 </tbody>

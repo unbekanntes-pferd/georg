@@ -1,7 +1,5 @@
 <script lang="ts">
 	import Search from '$lib/components/datatables/Search.svelte';
-	import ThFilter from '$lib/components/datatables/ThFilter.svelte';
-	import ThSort from '$lib/components/datatables/ThSort.svelte';
 	import RowCount from '$lib/components/datatables/RowCount.svelte';
 	import RowsPerPage from '$lib/components/datatables/RowsPerPage.svelte';
 	import Pagination from '$lib/components/datatables/Pagination.svelte';
@@ -9,45 +7,41 @@
 	import type { Assistant } from '$lib/models/models';
 	import type { Readable } from 'svelte/store';
 	import TableRow from '$lib/components/datatables/TableRowSchoolassistants.svelte';
+	import { visibleSchoolAssistantColumns as visibleColumns, columnLabelsSchoolAssistant as columnLabels, defaultSchoolAssistantColumns } from '$lib/stores/columnsSchoolAssistant';
+
+	import ColumnToggle from './ColumnToggle.svelte';
+	import { ColumnType } from '$lib/stores/models';
+
 	export let schoolAssistants: Assistant[];
 
 	let handler: DataHandler<Assistant> = new DataHandler(schoolAssistants, {
 		rowsPerPage: 10
 	});
 	let rows: Readable<Assistant[]> = handler.getRows();
-</script>
+
+	$: selectedColumns = $visibleColumns.defaultColumns;
+
+	</script>
 
 {#if rows}
-	<div class=" overflow-x-auto space-y-2">
+	<div class=" overflow-x-auto space-y-2 h-full" >
 		<header class="flex justify-between gap-4">
 			<Search {handler} />
+			<ColumnToggle columns={defaultSchoolAssistantColumns} {columnLabels} columnType={ColumnType.SchoolAssistant}/>
 		</header>
 		<table class="table table-hover table-compact table-auto w-full text-base">
 			<thead>
 				<tr>
-					<td>Match</td>
-					<ThSort {handler} orderBy="name">Name</ThSort>
-					<ThSort {handler} orderBy="location">Vorname</ThSort>
-					<td>Geb. Datum</td>
-					<td>Begl. Kind</td>
-					<td>Telefon</td>
-					<td>Mobil</td>
-					<td>Email </td>
-					<td>Straße</td>
-					<td>PLZ</td>
-					<td>Wohnort</td>
-					<td>Eigr.</td>
-					<td>genehm</td>
-					<td>Info</td>
-					<td>Abschlusszeugnisse</td>
-                    <td>Berufsbezeichnung / Ausbildung</td>
-                    <td>Kinder</td>
-                    <td>Zugehörigkeit</td>
+					{#each selectedColumns as column}
+						<td class="relative group">
+							{columnLabels[column]}
+						</td>
+					{/each}
 				</tr>
 			</thead>
-
+			
 			{#each $rows as row}
-				<TableRow schoolAssistant={row}/>
+				<TableRow  schoolAssistant={row} visibleColumns={selectedColumns} />
 			{/each}
 		</table>
 		<footer class="flex justify-end">

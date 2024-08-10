@@ -7,10 +7,12 @@
 
 	} from '$lib/models/models';
 	import { findCandidateMatches } from '$lib/data/data';
+	import type { ColumnKeyCandidate } from '$lib/stores/columnsCandidate';
 
 	const drawerStore = getDrawerStore();
 	export let candidate: Candidate;
-
+	export let visibleColumns: ColumnKeyCandidate[];
+	
 	let isOpenMatches = false;
 	let matches: ResponseGetCandidates[];
 
@@ -30,22 +32,17 @@
 	}
 </script>
 
+
 <tbody>
 	<tr>
-		<td on:click={() => getMatches(candidate.id)}><IconParkSolidConnection /></td>
-		<td>{candidate.name ? candidate.name : '-'}</td>
-		<td>{candidate.location ? candidate.location : '-'}</td>
-		<td>{candidate.qualification ? candidate.qualification : '-'}</td>
-		<td>{candidate.hours ? candidate.hours : '-'}</td>
-		<td>{candidate.mobility ? candidate.mobility : '-'}</td>
-		<td>{candidate.receivedAt ? candidate.receivedAt : '-'}</td>
-		<td>{candidate.notes ? candidate.notes : '-'}</td>
-		<td>{candidate.startNote ? candidate.startNote : '-'}</td>
-		<td>{candidate.sentDocuments ? candidate.sentDocuments : '-'}</td>
-		<td>{candidate.completedChecklist ? candidate.completedChecklist : '-'}</td>
-		<td>{candidate.vaccinationStat ? candidate.vaccinationStat : '-'}</td>
-		<td>{candidate.certificationState ? candidate.certificationState : '-'}</td>
-		<td>{candidate.personalDocumentation ? candidate.personalDocumentation : '-'}</td>
-		<td>{candidate.plannedChild ? candidate.plannedChild : '-'}</td>
+		{#each visibleColumns as column}
+			<td>
+				{#if column === 'id'}
+					<button on:click={() => getMatches(candidate.id)}><IconParkSolidConnection /></button>
+				{:else}
+					{candidate[column] === null ? "-" : candidate[column]}
+				{/if}
+			</td>
+		{/each}
 	</tr>
 </tbody>

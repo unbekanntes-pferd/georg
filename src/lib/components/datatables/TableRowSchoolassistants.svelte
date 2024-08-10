@@ -6,9 +6,11 @@
 		type Assistant
 	} from '$lib/models/models';
 	import { findSAssistantMatches } from '$lib/data/data';
+	import type { ColumnKeySchoolAssistant } from '$lib/stores/columnsSchoolAssistant';
 
 	const drawerStore = getDrawerStore();
 	export let schoolAssistant: Assistant;
+	export let visibleColumns: ColumnKeySchoolAssistant[];
 
 	let isOpenMatches = false;
 	let matches: ResponseGetSchoolAssistantMatches[];
@@ -31,23 +33,14 @@
 
 <tbody>
 	<tr>
-		<td on:click={() => getMatches(schoolAssistant.id)}><IconParkSolidConnection /></td>
-		<td>{schoolAssistant.lastName ? schoolAssistant.lastName : '-'}</td>
-		<td>{schoolAssistant.firstName ? schoolAssistant.firstName : '-'}</td>
-		<td>{schoolAssistant.birthDate ? schoolAssistant.birthDate : '-'}</td>
-		<td>{schoolAssistant.assignedChild ? schoolAssistant.assignedChild : '-'}</td>
-		<td>{schoolAssistant.telNumber ? schoolAssistant.telNumber : '-'}</td>
-		<td>{schoolAssistant.mobileNumber ? schoolAssistant.mobileNumber : '-'}</td>
-		<td>{schoolAssistant.email ? schoolAssistant.email : '-'}</td>
-		<td>{schoolAssistant.address ? schoolAssistant.address : '-'}</td>
-		<td>{schoolAssistant.zipCode ? schoolAssistant.zipCode : '-'}</td>
-		<td>{schoolAssistant.city ? schoolAssistant.city : '-'}</td>
-		<td>{schoolAssistant.level ? schoolAssistant.level : '-'}</td>
-		<td>{schoolAssistant.approved ? schoolAssistant.approved : '-'}</td>
-		<td>{schoolAssistant.info ? schoolAssistant.info : '-'}</td>
-		<td>{schoolAssistant.certifications ? schoolAssistant.certifications : '-'}</td>
-		<td>{schoolAssistant.title ? schoolAssistant.title : '-'}</td>
-		<td>{schoolAssistant.children ? schoolAssistant.children : '-'}</td>
-		<td>{schoolAssistant.assitantSince ? schoolAssistant.assitantSince : '-'}</td>
+		{#each visibleColumns as column}
+			<td>
+				{#if column === 'id'}
+					<button on:click={() => getMatches(schoolAssistant.id)}><IconParkSolidConnection /></button>
+				{:else}
+					{schoolAssistant[column] === null ? "-" : schoolAssistant[column]}
+				{/if}
+			</td>
+		{/each}
 	</tr>
 </tbody>

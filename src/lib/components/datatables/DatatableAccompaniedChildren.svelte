@@ -1,14 +1,13 @@
 <script lang="ts">
-	import Search from '$lib/components/datatables/Search.svelte';
-	import ThFilter from '$lib/components/datatables/ThFilter.svelte';
-	import ThSort from '$lib/components/datatables/ThSort.svelte';
+	import Pagination from '$lib/components/datatables/Pagination.svelte';
 	import RowCount from '$lib/components/datatables/RowCount.svelte';
 	import RowsPerPage from '$lib/components/datatables/RowsPerPage.svelte';
-	import Pagination from '$lib/components/datatables/Pagination.svelte';
-	import { DataHandler } from '@vincjo/datatables';
-	import type { AccompaniedChild, Assistant } from '$lib/models/models';
-	import type { Readable } from 'svelte/store';
+	import Search from '$lib/components/datatables/Search.svelte';
 	import TableRow from '$lib/components/datatables/TableRowAccompaniedChildren.svelte';
+	import ThSort from '$lib/components/datatables/ThSort.svelte';
+	import type { AccompaniedChild } from '$lib/models/models';
+	import { DataHandler } from '@vincjo/datatables';
+	import type { Readable } from 'svelte/store';
 	export let accompaniedChildren: AccompaniedChild[];
 
 	let handler: DataHandler<AccompaniedChild> = new DataHandler(accompaniedChildren, {

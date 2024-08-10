@@ -7,39 +7,52 @@
 	import type { Readable } from 'svelte/store';
 	import TableRow from '$lib/components/datatables/TableRowChildren.svelte';
 	import Search from '$lib/components/datatables/Search.svelte';
+	import { visibleChildCareColumns as visibleColumns, columnLabelsChildCare as columnLabels, defaultChildCareColumns, type ColumnKeyChildCare, columnLabelsChildCare, columnPositions, ColumnKeyChildCareEnum } from '$lib/stores/columnsChildcare';
+	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+	import ThSort from './ThSort.svelte';
+	import ColumnToggle from './ColumnToggle.svelte';
+	import { ColumnType } from '$lib/stores/models';
 
 	export let childCareRequests: ChildCareRequest[];
-	console.log(childCareRequests);
 	let handler: DataHandler<ChildCareRequest> = new DataHandler(childCareRequests, {
 		rowsPerPage: 10
 	});
 	let rows: Readable<ChildCareRequest[]> = handler.getRows();
+
+	$: selectedColumns = $visibleColumns.defaultColumns;
+	
+	function sortable(column: ColumnKeyChildCare) {
+		let sortables: ColumnKeyChildCare[] = [ColumnKeyChildCareEnum.contact, ColumnKeyChildCareEnum.institution, ColumnKeyChildCareEnum.location];
+		return sortables.includes(column);
+	}
 </script>
 
 {#if rows}
-	<div class=" overflow-x-auto space-y-2">
+	<div class="overflow-x-auto space-y-2 h-full">
 		<header class="flex justify-between gap-4">
 			<Search {handler} />
+			<ColumnToggle columns={defaultChildCareColumns} {columnLabels}  columnType={ColumnType.ChildCare}/>
 		</header>
 		<table class="table table-hover table-compact table-auto w-full text-base">
 			<thead>
 				<tr>
-					<td>Match</td>
-					<td>Einrichtung</td>
-					<td>Ort</td>
-					<td>Klasse.</td>
-					<td>Stunden</td>
-					<td>Diagnose</td>
-					<td>Ansprechpartner*in</td>
-					<td>Datum </td>
-					<td>Bemerkung</td>
+					{#each selectedColumns as column}
+					<th class="relative group">
+						{#if sortable(column)}
+							<ThSort {handler} orderBy={column}>{columnLabels[column]}</ThSort>
+						{:else}
+							{columnLabels[column]}
+						{/if}
+						
+					</th>
+					{/each}
 				</tr>
 			</thead>
 			
-				{#each $rows as row}
-					<TableRow childCareRequest={row} />
-				{/each}
-		
+			{#each $rows as row}
+				<TableRow childCareRequest={row} visibleColumns={selectedColumns} />
+			{/each}
 		</table>
 		<footer class="flex justify-end">
 			<RowsPerPage {handler} />
@@ -48,8 +61,9 @@
 		</footer>
 	</div>
 {/if}
-
+<!-- svelte-ignore css-unused-selector -->
 <style lang="scss">
+	
 	td {
 		@apply p-4;
 	}
