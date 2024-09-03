@@ -18,7 +18,7 @@
 	{#if childCareRequests}
 		{#each childCareRequests as childCareRequest}
 			<div
-				class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard first:bg-surface-700 dark:first:bg-surface-200"
+				class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard first:bg-surface-300-600-token"
 			>
 				<div class="flex flex-row">
 					<span class="font-bold">Einrichtung </span>

@@ -3,10 +3,7 @@
 	import { getDrawerStore, type DrawerSettings } from '@skeletonlabs/skeleton';
 	import {
 		type ResponseGetAccompaniedChildMatches,
-
 		type AccompaniedChild
-
-
 	} from '$lib/models/models';
 	import { findAccompaniedChildrenMatches } from '$lib/data/data';
 
@@ -33,7 +30,7 @@
 </script>
 
 <tbody>
-	<tr>
+	<tr on:click={() => getMatches(accompaniedChild.id)}>
 		<td on:click={() => getMatches(accompaniedChild.id)}><IconParkSolidConnection /></td>
 		<td>{accompaniedChild.name ? accompaniedChild.name : '-'}</td>
 		<td>{accompaniedChild.qualification ? accompaniedChild.qualification : '-'}</td>
@@ -43,6 +40,5 @@
 		<td>{accompaniedChild.contactPhone ? accompaniedChild.contactPhone : '-'}</td>
 		<td>{accompaniedChild.contactEmail ? accompaniedChild.contactEmail : '-'}</td>
 		<td>{accompaniedChild.notes ? accompaniedChild.notes : '-'}</td>
-		
 	</tr>
 </tbody>

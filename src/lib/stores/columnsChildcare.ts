@@ -1,9 +1,9 @@
 import { persisted } from "svelte-persisted-store";
 
-export type ColumnKeyChildCare = 'id' | 'institution' | 'location' | 'grade' | 'hours' | 'diagnosis' | 'contact' | 'receivedAt' | 'notes';
+export type ColumnKeyChildCare = 'institution' | 'location' | 'grade' | 'hours' | 'diagnosis' | 'contact' | 'receivedAt' | 'notes';
 
 export enum ColumnKeyChildCareEnum {
-    id = 'id',
+    // id = 'id',
     institution = 'institution',
     location = 'location',
     grade = 'grade',
@@ -19,11 +19,11 @@ export type ColumnLabelsChildCare = {
 };
 
 export const defaultChildCareColumns: ColumnKeyChildCare[] = [
-    ColumnKeyChildCareEnum.id, ColumnKeyChildCareEnum.institution, ColumnKeyChildCareEnum.location, ColumnKeyChildCareEnum.grade, ColumnKeyChildCareEnum.hours, ColumnKeyChildCareEnum.diagnosis, ColumnKeyChildCareEnum.contact, ColumnKeyChildCareEnum.receivedAt, ColumnKeyChildCareEnum.notes
+   ColumnKeyChildCareEnum.institution, ColumnKeyChildCareEnum.location, ColumnKeyChildCareEnum.grade, ColumnKeyChildCareEnum.hours, ColumnKeyChildCareEnum.diagnosis, ColumnKeyChildCareEnum.contact, ColumnKeyChildCareEnum.receivedAt, ColumnKeyChildCareEnum.notes
 ];
 
 export const columnLabelsChildCare: ColumnLabelsChildCare = {
-    id: 'Match',
+    // id: 'Match',
     institution: 'Einrichtung',
     location: 'Ort',
     grade: 'Klasse',

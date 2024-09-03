@@ -1,10 +1,9 @@
 import { persisted } from "svelte-persisted-store";
 
 
-export type ColumnKeySchoolAssistant = 'id' | 'lastName' | 'firstName' | 'birthDate' | 'assignedChild' | 'telNumber' | 'mobileNumber' | 'email' | 'address' | 'zipCode' | 'city' | 'level' | 'approved' | 'info' | 'certifications' | 'title' | 'children' | 'assitantSince';
+export type ColumnKeySchoolAssistant = 'lastName' | 'firstName' | 'birthDate' | 'assignedChild' | 'telNumber' | 'mobileNumber' | 'email' | 'address' | 'zipCode' | 'city' | 'level' | 'approved' | 'info' | 'certifications' | 'title' | 'children' | 'assitantSince';
 
 export enum ColumnKeySchoolAssistantEnum {
-    id = 'id',
     lastName = 'lastName',
     firstName = 'firstName',
     birthDate = 'birthDate',
@@ -29,11 +28,10 @@ export type ColumnLabelsSchoolAssistant = {
   };
 
 export const defaultSchoolAssistantColumns: ColumnKeySchoolAssistant[] = [
-    ColumnKeySchoolAssistantEnum.id, ColumnKeySchoolAssistantEnum.lastName, ColumnKeySchoolAssistantEnum.firstName, ColumnKeySchoolAssistantEnum.birthDate, ColumnKeySchoolAssistantEnum.assignedChild, ColumnKeySchoolAssistantEnum.telNumber, ColumnKeySchoolAssistantEnum.mobileNumber, ColumnKeySchoolAssistantEnum.email, ColumnKeySchoolAssistantEnum.address, ColumnKeySchoolAssistantEnum.zipCode, ColumnKeySchoolAssistantEnum.city, ColumnKeySchoolAssistantEnum.level, ColumnKeySchoolAssistantEnum.approved, ColumnKeySchoolAssistantEnum.info, ColumnKeySchoolAssistantEnum.certifications, ColumnKeySchoolAssistantEnum.title, ColumnKeySchoolAssistantEnum.children, ColumnKeySchoolAssistantEnum.assitantSince
+    ColumnKeySchoolAssistantEnum.lastName, ColumnKeySchoolAssistantEnum.firstName, ColumnKeySchoolAssistantEnum.birthDate, ColumnKeySchoolAssistantEnum.assignedChild, ColumnKeySchoolAssistantEnum.telNumber, ColumnKeySchoolAssistantEnum.mobileNumber, ColumnKeySchoolAssistantEnum.email, ColumnKeySchoolAssistantEnum.address, ColumnKeySchoolAssistantEnum.zipCode, ColumnKeySchoolAssistantEnum.city, ColumnKeySchoolAssistantEnum.level, ColumnKeySchoolAssistantEnum.approved, ColumnKeySchoolAssistantEnum.info, ColumnKeySchoolAssistantEnum.certifications, ColumnKeySchoolAssistantEnum.title, ColumnKeySchoolAssistantEnum.children, ColumnKeySchoolAssistantEnum.assitantSince
 ];
 
 export const columnLabelsSchoolAssistant: ColumnLabelsSchoolAssistant = {
-    id: 'Match',
     lastName: 'Nachname',
     firstName: 'Vorname',
     birthDate: 'Geb. Datum',

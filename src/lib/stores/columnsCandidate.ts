@@ -1,9 +1,9 @@
 import { persisted } from "svelte-persisted-store";
 
-export type ColumnKeyCandidate = 'id' | 'name' | 'location' | 'qualification' | 'hours' | 'mobility' | 'receivedAt' | 'notes' | 'startNote' | 'sentDocuments' | 'completedChecklist' | 'vaccinationStat' | 'certificationState' | 'personalDocumentation' | 'plannedChild';
+export type ColumnKeyCandidate = 'name' | 'location' | 'qualification' | 'hours' | 'mobility' | 'receivedAt' | 'notes' | 'startNote' | 'sentDocuments' | 'completedChecklist' | 'vaccinationStat' | 'certificationState' | 'personalDocumentation' | 'plannedChild';
 
 export enum ColumnKeyCandidateEnum {
-    id = 'id',
+   // id = 'id',
     name = 'name',
     location = 'location',
     qualification = 'qualification',
@@ -25,11 +25,11 @@ export type ColumnLabelsCandidate = {
 };
 
 export const defaultCandidateColumns: ColumnKeyCandidate[] = [
-    ColumnKeyCandidateEnum.id, ColumnKeyCandidateEnum.name, ColumnKeyCandidateEnum.location, ColumnKeyCandidateEnum.qualification, ColumnKeyCandidateEnum.hours, ColumnKeyCandidateEnum.mobility, ColumnKeyCandidateEnum.receivedAt, ColumnKeyCandidateEnum.notes, ColumnKeyCandidateEnum.startNote, ColumnKeyCandidateEnum.sentDocuments, ColumnKeyCandidateEnum.completedChecklist, ColumnKeyCandidateEnum.vaccinationStat, ColumnKeyCandidateEnum.certificationState, ColumnKeyCandidateEnum.personalDocumentation, ColumnKeyCandidateEnum.plannedChild
+    ColumnKeyCandidateEnum.name, ColumnKeyCandidateEnum.location, ColumnKeyCandidateEnum.qualification, ColumnKeyCandidateEnum.hours, ColumnKeyCandidateEnum.mobility, ColumnKeyCandidateEnum.receivedAt, ColumnKeyCandidateEnum.notes, ColumnKeyCandidateEnum.startNote, ColumnKeyCandidateEnum.sentDocuments, ColumnKeyCandidateEnum.completedChecklist, ColumnKeyCandidateEnum.vaccinationStat, ColumnKeyCandidateEnum.certificationState, ColumnKeyCandidateEnum.personalDocumentation, ColumnKeyCandidateEnum.plannedChild
 ];
 
 export const columnLabelsCandidate: ColumnLabelsCandidate = {
-    id: 'Match',
+   // id: 'Match',
     name: 'Name',
     location: 'Ort',
     qualification: 'Qualif.',

@@ -1,10 +1,7 @@
 <script lang="ts">
 	import IconParkSolidConnection from '~icons/icon-park-solid/connection';
 	import { getDrawerStore, type DrawerSettings } from '@skeletonlabs/skeleton';
-	import {
-		type ResponseGetSchoolAssistantMatches,
-		type Assistant
-	} from '$lib/models/models';
+	import { type ResponseGetSchoolAssistantMatches, type Assistant } from '$lib/models/models';
 	import { findSAssistantMatches } from '$lib/data/data';
 	import type { ColumnKeySchoolAssistant } from '$lib/stores/columnsSchoolAssistant';
 
@@ -34,12 +31,8 @@
 <tbody>
 	<tr>
 		{#each visibleColumns as column}
-			<td>
-				{#if column === 'id'}
-					<button on:click={() => getMatches(schoolAssistant.id)}><IconParkSolidConnection /></button>
-				{:else}
-					{schoolAssistant[column] === null ? "-" : schoolAssistant[column]}
-				{/if}
+			<td on:click={() => getMatches(schoolAssistant.id)} class="cursor-pointer">
+				{schoolAssistant[column] === null ? '-' : schoolAssistant[column]}
 			</td>
 		{/each}
 	</tr>
