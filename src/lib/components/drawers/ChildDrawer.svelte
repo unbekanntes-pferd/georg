@@ -4,7 +4,7 @@
 	import Time from '~icons/fluent-mdl2/date-time';
 	import TimeEntry from '~icons/fluent-mdl2/time-entry';
 	import Notes from '~icons/material-symbols/note-outline';
-	import Qulification from '~icons/hugeicons/new-job';	
+	import Qulification from '~icons/hugeicons/new-job';
 	import Profile from '~icons/iconamoon/profile-thin';
 	import Transport from '~icons/material-symbols-light/transportation-outline-sharp';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
@@ -17,21 +17,32 @@
 <div class="p-4">
 	{#if childCareRequests}
 		{#each childCareRequests as childCareRequest}
-			<div class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard">
+			<div
+				class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard first:bg-surface-700 dark:first:bg-surface-200"
+			>
 				<div class="flex flex-row">
 					<span class="font-bold">Name </span>
 					<Profile class="mx-2" />
-					<p class="font-">{childCareRequest.candidate.name ? childCareRequest.candidate.name : '-'}</p>
+					<p class="font-">
+						{childCareRequest.candidate.name ? childCareRequest.candidate.name : '-'}
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Wohnort </span>
 					<LocationIcon class="mx-2" />
-					<p>{childCareRequest.candidate.location ? childCareRequest.candidate.location : '-'} (Distanz: {childCareRequest ? childCareRequest.distance.toFixed(0) : '-'} km)</p>
+					<p class="location">
+						{childCareRequest.candidate.location ? childCareRequest.candidate.location : '-'} (Distanz:
+						{childCareRequest ? childCareRequest.distance.toFixed(0) : '-'} km)
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Qualifikation </span>
 					<Qulification class="mx-2" />
-					<p>{childCareRequest.candidate.qualification ? childCareRequest.candidate.qualification : '-'}</p>
+					<p>
+						{childCareRequest.candidate.qualification
+							? childCareRequest.candidate.qualification
+							: '-'}
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Stundenumfang </span>
@@ -46,12 +57,18 @@
 				<div class="flex flex-row">
 					<span class="font-bold">Geplantes Kind </span>
 					<Family class="mx-2" />
-					<p>{childCareRequest.candidate.plannedChild ? childCareRequest.candidate.plannedChild : '-'}</p>
+					<p>
+						{childCareRequest.candidate.plannedChild
+							? childCareRequest.candidate.plannedChild
+							: '-'}
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Eingang </span>
 					<TimeEntry class="mx-2" />
-					<p>{childCareRequest.candidate.receivedAt ? childCareRequest.candidate.receivedAt : '-'}</p>
+					<p>
+						{childCareRequest.candidate.receivedAt ? childCareRequest.candidate.receivedAt : '-'}
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Notizen </span>
@@ -66,5 +83,8 @@
 <style>
 	.childCard div {
 		@apply items-center;
+	}
+	.childCard:first-child .location {
+		@apply text-green-500; /* Apply the green text color to the location of the first child card */
 	}
 </style>

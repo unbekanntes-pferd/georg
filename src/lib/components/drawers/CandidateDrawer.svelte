@@ -17,16 +17,23 @@
 <div class="p-4">
 	{#if childCareRequests}
 		{#each childCareRequests as childCareRequest}
-			<div class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard">
+			<div
+				class="border rounded-md p-2 mb-2 grid grid-cols-2 gap-4 childCard first:bg-surface-700 dark:first:bg-surface-200"
+			>
 				<div class="flex flex-row">
 					<span class="font-bold">Einrichtung </span>
 					<Institution class="mx-2" />
-					<p class="font-">{childCareRequest.candidate.institution ? childCareRequest.candidate.institution : '-'}</p>
+					<p class="font-">
+						{childCareRequest.candidate.institution ? childCareRequest.candidate.institution : '-'}
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Wohnort </span>
 					<LocationIcon class="mx-2" />
-					<p>{childCareRequest.candidate.location ? childCareRequest.candidate.location : '-'} (Distanz: {childCareRequest ? childCareRequest.distance.toFixed(0) : '-'} km)</p>
+					<p class="location">
+						{childCareRequest.candidate.location ? childCareRequest.candidate.location : '-'} (Distanz:
+						{childCareRequest ? childCareRequest.distance.toFixed(0) : '-'} km)
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Klasse </span>
@@ -51,7 +58,9 @@
 				<div class="flex flex-row">
 					<span class="font-bold">Datum </span>
 					<TimeEntry class="mx-2" />
-					<p>{childCareRequest.candidate.receivedAt ? childCareRequest.candidate.receivedAt : '-'}</p>
+					<p>
+						{childCareRequest.candidate.receivedAt ? childCareRequest.candidate.receivedAt : '-'}
+					</p>
 				</div>
 				<div class="flex flex-row">
 					<span class="font-bold">Bemerkung </span>
@@ -64,8 +73,10 @@
 </div>
 
 <style>
-	
 	.childCard div {
 		@apply items-center;
+	}
+	.childCard:first-child .location {
+		@apply text-green-500; /* Apply the green text color to the location of the first child card */
 	}
 </style>
